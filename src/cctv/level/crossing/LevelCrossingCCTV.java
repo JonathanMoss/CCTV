@@ -3,8 +3,7 @@ package cctv.level.crossing;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -76,8 +75,8 @@ public class LevelCrossingCCTV extends AnchorPane{
     public Boolean getMediaVisible() {return this.mediaVisible.get();}
     public void setMediaVisible(Boolean mediaVisible){this.mediaVisible.set(mediaVisible);}
     
-    private Duration startTime = new Duration(MediaChapter.TRAIN_LEFT_TO_RIGHT.getStart());
-    private Duration endTime = new Duration(MediaChapter.TRAIN_LEFT_TO_RIGHT.getEnd());
+    private Duration startTime = Duration.seconds(MediaChapter.BARRIERS_UP_STILL.getStart());
+    private Duration endTime = Duration.seconds(MediaChapter.BARRIERS_UP_STILL.getEnd());
     
     public LevelCrossingCCTV () {
         
@@ -104,23 +103,23 @@ public class LevelCrossingCCTV extends AnchorPane{
                 switch ((LevelCrossingActionStatus) newValue) {
                     
                     case BARRIERS_UP:
-                        startTime = new Duration(MediaChapter.BARRIERS_UP_STILL.getStart());
-                        endTime = new Duration(MediaChapter.BARRIERS_UP_STILL.getEnd());
+                        startTime = Duration.seconds(MediaChapter.BARRIERS_UP_STILL.getStart());
+                        endTime = Duration.seconds(MediaChapter.BARRIERS_UP_STILL.getEnd());
                         break;
                         
                     case BARRIERS_LOWERING:
-                        startTime = new Duration(MediaChapter.LOWER_SEQUENCE.getStart());
-                        endTime = new Duration(MediaChapter.LOWER_SEQUENCE.getEnd());
+                        startTime = Duration.seconds(MediaChapter.LOWER_SEQUENCE.getStart());
+                        endTime = Duration.seconds(MediaChapter.LOWER_SEQUENCE.getEnd());
                         break;
                         
                     case BARRIERS_DOWN_NO_TRAINS:
-                        startTime = new Duration(MediaChapter.BARRIERS_DOWN.getStart());
-                        endTime = new Duration(MediaChapter.BARRIERS_DOWN.getEnd());
+                        startTime = Duration.seconds(MediaChapter.BARRIERS_DOWN.getStart());
+                        endTime = Duration.seconds(MediaChapter.BARRIERS_DOWN.getEnd());
                         break;
                         
                     case BARRIERS_DOWN_TRAIN_LEFT_TO_RIGHT:
-                        startTime = new Duration(MediaChapter.TRAIN_LEFT_TO_RIGHT.getStart());
-                        endTime = new Duration(MediaChapter.TRAIN_LEFT_TO_RIGHT.getEnd());
+                        startTime = Duration.seconds(MediaChapter.TRAIN_LEFT_TO_RIGHT.getStart());
+                        endTime = Duration.seconds(MediaChapter.TRAIN_LEFT_TO_RIGHT.getEnd());
                         break;
                         
                     case BARRIERS_DOWN_TRAIN_RIGHT_TO_LEFT:
@@ -129,8 +128,8 @@ public class LevelCrossingCCTV extends AnchorPane{
                         break;
                         
                     case BARRIERS_RAISING:
-                        startTime = new Duration(MediaChapter.RAISE_SEQUENCE.getStart());
-                        endTime = new Duration(MediaChapter.RAISE_SEQUENCE.getEnd());
+                        startTime = Duration.seconds(MediaChapter.RAISE_SEQUENCE.getStart());
+                        endTime = Duration.seconds(MediaChapter.RAISE_SEQUENCE.getEnd());
                         break; 
                     
                 }
@@ -299,32 +298,33 @@ public class LevelCrossingCCTV extends AnchorPane{
         this.pictureButtonClickTarget.setOnMouseClicked(e -> {
         
             if (!this.getMediaVisible()) {
+                
                 this.setMediaVisible(true);
-                System.out.println("HERE");
                 
                 new Thread(() -> {
                 
                     try {
                         
                         Thread.sleep (10000);
+                        FadeTransition ft = new FadeTransition(Duration.millis(1500), mv);
+                        ft.setFromValue(1.0);
+                        ft.setToValue(0.0);
+                        ft.setCycleCount(1);
+                        ft.play();
                         this.setMediaVisible(false);
-                        System.out.println("HERE2");
-                        
+
                     } catch (InterruptedException ex) {}
                     
                 }).start(); 
             }
-        
-        
-        
+
         });
         
         this.stopButtonClickTarget.setOnMouseClicked(e -> {});
 
-        
         this.mv.setMediaPlayer(mp);
         this.mp.setStartTime(this.startTime);
-        //this.mp.setStopTime(this.endTime);
+        this.mp.setStopTime(this.endTime);
         
         this.mp.setOnReady(() -> {
             
@@ -334,7 +334,11 @@ public class LevelCrossingCCTV extends AnchorPane{
         
         this.mp.setOnEndOfMedia(() -> {
         
-            //this.mp.seek(this.mp.getStartTime());
+            if (getLevelCrossingActionStatus().equals(LevelCrossingActionStatus.BARRIERS_DOWN_NO_TRAINS)) {
+                
+                this.mp.seek(this.mp.getStartTime());
+                
+            }
         
         });
         
