@@ -1,15 +1,21 @@
 package cctv.level.crossing;
 
-import java.io.File;
+
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-import javafx.scene.media.AudioClip;
-import static javafx.scene.media.AudioClip.INDEFINITE;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -26,7 +32,6 @@ public class LevelCrossingCCTV extends AnchorPane{
     private FXMLLoader fxmlLoader;
     
     @FXML private AnchorPane pane;
-
     @FXML private Pane wipersSwitch;
     @FXML private Pane illuminationSwitch;
     @FXML private Pane camerasSwitch;
@@ -34,7 +39,7 @@ public class LevelCrossingCCTV extends AnchorPane{
     @FXML private Pane levelCrossingSwitch;
     @FXML private Pane powerSwitch;
     @FXML private Pane roadSignalsSwitch;
-    @FXML private Circle leveCrossingFailedLight;
+    @FXML private Circle levelCrossingFailedLight;
     @FXML private Circle roadSignalsFailedLight;
     @FXML private Circle roadSignalsWorkingLight;
     @FXML private Circle powerFailedLight;
@@ -60,11 +65,21 @@ public class LevelCrossingCCTV extends AnchorPane{
     
     private final static String MEDIA = "/resources/media.mp4";
     private final URL mediaFile = getClass().getResource(MEDIA);
-    private final Media videoClip = new Media(mediaFile.toString());
+    private final Media videoClip = new Media(this.mediaFile.toString());
+    private final MediaPlayer mp = new MediaPlayer (this.videoClip);
+    
+    private ObjectProperty <LevelCrossingActionStatus> status = new SimpleObjectProperty<>(LevelCrossingActionStatus.BARRIERS_UP);
+    public LevelCrossingActionStatus getLevelCrossingActionStatus() {return this.status.get();}
+    public void setLevelCrossingActionStatus(LevelCrossingActionStatus status){this.status.set(status);}
+    
+    private BooleanProperty mediaVisible = new SimpleBooleanProperty (false);
+    public Boolean getMediaVisible() {return this.mediaVisible.get();}
+    public void setMediaVisible(Boolean mediaVisible){this.mediaVisible.set(mediaVisible);}
+    
+    private Duration startTime = new Duration(MediaChapter.TRAIN_LEFT_TO_RIGHT.getStart());
+    private Duration endTime = new Duration(MediaChapter.TRAIN_LEFT_TO_RIGHT.getEnd());
     
     public LevelCrossingCCTV () {
-        
-        System.out.println(mediaFile);
         
         // Get a reference to the FXML file.
         this.fxmlLoader = new FXMLLoader(getClass().getResource("LevelCrossingCCTV.fxml"));
@@ -77,6 +92,54 @@ public class LevelCrossingCCTV extends AnchorPane{
         try {
             fxmlLoader.load();
         } catch (IOException e) {}
+        
+        //mp.setMute(true);
+        this.mv.visibleProperty().bindBidirectional(mediaVisible);
+
+        this.status.addListener(new ChangeListener () {
+            
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                
+                switch ((LevelCrossingActionStatus) newValue) {
+                    
+                    case BARRIERS_UP:
+                        startTime = new Duration(MediaChapter.BARRIERS_UP_STILL.getStart());
+                        endTime = new Duration(MediaChapter.BARRIERS_UP_STILL.getEnd());
+                        break;
+                        
+                    case BARRIERS_LOWERING:
+                        startTime = new Duration(MediaChapter.LOWER_SEQUENCE.getStart());
+                        endTime = new Duration(MediaChapter.LOWER_SEQUENCE.getEnd());
+                        break;
+                        
+                    case BARRIERS_DOWN_NO_TRAINS:
+                        startTime = new Duration(MediaChapter.BARRIERS_DOWN.getStart());
+                        endTime = new Duration(MediaChapter.BARRIERS_DOWN.getEnd());
+                        break;
+                        
+                    case BARRIERS_DOWN_TRAIN_LEFT_TO_RIGHT:
+                        startTime = new Duration(MediaChapter.TRAIN_LEFT_TO_RIGHT.getStart());
+                        endTime = new Duration(MediaChapter.TRAIN_LEFT_TO_RIGHT.getEnd());
+                        break;
+                        
+                    case BARRIERS_DOWN_TRAIN_RIGHT_TO_LEFT:
+                        startTime = new Duration(MediaChapter.TRAIN_RIGHT_TO_LEFT.getStart());
+                        endTime = new Duration(MediaChapter.TRAIN_RIGHT_TO_LEFT.getEnd());
+                        break;
+                        
+                    case BARRIERS_RAISING:
+                        startTime = new Duration(MediaChapter.RAISE_SEQUENCE.getStart());
+                        endTime = new Duration(MediaChapter.RAISE_SEQUENCE.getEnd());
+                        break; 
+                    
+                }
+                
+                mp.seek(startTime);
+                
+            }
+
+        });
         
         this.wiperClicktarget.setOnMouseClicked(e -> {
             
@@ -233,19 +296,47 @@ public class LevelCrossingCCTV extends AnchorPane{
         
         this.lowerButtonClickTarget.setOnMouseClicked(e -> {});
         
-        this.pictureButtonClickTarget.setOnMouseClicked(e -> {});
+        this.pictureButtonClickTarget.setOnMouseClicked(e -> {
+        
+            if (!this.getMediaVisible()) {
+                this.setMediaVisible(true);
+                System.out.println("HERE");
+                
+                new Thread(() -> {
+                
+                    try {
+                        
+                        Thread.sleep (10000);
+                        this.setMediaVisible(false);
+                        System.out.println("HERE2");
+                        
+                    } catch (InterruptedException ex) {}
+                    
+                }).start(); 
+            }
+        
+        
+        
+        });
         
         this.stopButtonClickTarget.setOnMouseClicked(e -> {});
 
-        MediaPlayer mp = new MediaPlayer (this.videoClip);
-        mv.setMediaPlayer(mp);
-        System.out.println(this.videoClip.getHeight());
-        mp.setStartTime(Duration.seconds(MediaChapter.TRAIN_LEFT_TO_RIGHT.getStart()));
-        mp.setStopTime(Duration.seconds(MediaChapter.TRAIN_LEFT_TO_RIGHT.getEnd()));
-        mp.setCycleCount(INDEFINITE);
-
-        mp.setMute(true);
-        mp.play();
+        
+        this.mv.setMediaPlayer(mp);
+        this.mp.setStartTime(this.startTime);
+        //this.mp.setStopTime(this.endTime);
+        
+        this.mp.setOnReady(() -> {
+            
+            mp.play();
+            
+        });
+        
+        this.mp.setOnEndOfMedia(() -> {
+        
+            //this.mp.seek(this.mp.getStartTime());
+        
+        });
         
     }
     
