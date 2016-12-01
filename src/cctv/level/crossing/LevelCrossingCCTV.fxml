@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.Double?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.text.Font?>
+
+<fx:root fx:id="pane" prefHeight="709.0" prefWidth="448.0" style="-fx-background-color: rgb(108, 202, 126);" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane fx:id="wipersSwitch" layoutX="67.0" layoutY="48.0" rotate="-45.0">
+         <children>
+            <Circle centerX="22.0" centerY="22.0" radius="22.0" stroke="BLACK" strokeType="INSIDE">
+               <effect>
+                  <DropShadow height="12.0" radius="5.5" width="12.0" />
+               </effect></Circle>
+            <Polygon layoutX="-28.0" layoutY="-48.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0">
+              <points>
+                <Double fx:value="50.0" />
+                <Double fx:value="50.0" />
+                <Double fx:value="58.0" />
+                <Double fx:value="86.0" />
+                <Double fx:value="42.0" />
+                <Double fx:value="86.0" />
+              </points>
+            </Polygon>
+         </children>
+      </Pane>
+      <Pane fx:id="illuminationSwitch" layoutX="256.0" layoutY="48.0" rotate="-45.0">
+         <children>
+            <Circle centerX="22.0" centerY="22.0" radius="22.0" stroke="BLACK" strokeType="INSIDE">
+               <effect>
+                  <DropShadow height="12.0" radius="5.5" width="12.0" />
+               </effect></Circle>
+            <Polygon layoutX="-28.0" layoutY="-48.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0">
+               <points>
+                  <Double fx:value="50.0" />
+                  <Double fx:value="50.0" />
+                  <Double fx:value="58.0" />
+                  <Double fx:value="86.0" />
+                  <Double fx:value="42.0" />
+                  <Double fx:value="86.0" />
+               </points>
+            </Polygon>
+         </children>
+      </Pane>
+      <Pane fx:id="camerasSwitch" layoutX="67.0" layoutY="151.0" rotate="-45.0">
+         <children>
+            <Circle centerX="22.0" centerY="22.0" radius="22.0" stroke="BLACK" strokeType="INSIDE">
+               <effect>
+                  <DropShadow height="12.0" radius="5.5" width="12.0" />
+               </effect></Circle>
+            <Polygon layoutX="-28.0" layoutY="-48.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0">
+               <points>
+                  <Double fx:value="50.0" />
+                  <Double fx:value="50.0" />
+                  <Double fx:value="58.0" />
+                  <Double fx:value="86.0" />
+                  <Double fx:value="42.0" />
+                  <Double fx:value="86.0" />
+               </points>
+            </Polygon>
+         </children>
+      </Pane>
+      <Pane fx:id="monitorSwitch" layoutX="256.0" layoutY="151.0" rotate="45.0">
+         <children>
+            <Circle centerX="22.0" centerY="22.0" radius="22.0" stroke="BLACK" strokeType="INSIDE">
+               <effect>
+                  <DropShadow height="12.0" radius="5.5" width="12.0" />
+               </effect></Circle>
+            <Polygon layoutX="-28.0" layoutY="-48.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0">
+               <points>
+                  <Double fx:value="50.0" />
+                  <Double fx:value="50.0" />
+                  <Double fx:value="58.0" />
+                  <Double fx:value="86.0" />
+                  <Double fx:value="42.0" />
+                  <Double fx:value="86.0" />
+               </points>
+            </Polygon>
+         </children>
+      </Pane>
+      <Pane fx:id="levelCrossingSwitch" layoutX="66.0" layoutY="253.0" rotate="-45.0">
+         <children>
+            <Circle centerX="22.0" centerY="22.0" radius="22.0" stroke="BLACK" strokeType="INSIDE">
+               <effect>
+                  <DropShadow height="12.0" radius="5.5" width="12.0" />
+               </effect></Circle>
+            <Polygon layoutX="-28.0" layoutY="-48.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0">
+               <points>
+                  <Double fx:value="50.0" />
+                  <Double fx:value="50.0" />
+                  <Double fx:value="58.0" />
+                  <Double fx:value="86.0" />
+                  <Double fx:value="42.0" />
+                  <Double fx:value="86.0" />
+               </points>
+            </Polygon>
+         </children>
+      </Pane>
+      <Pane fx:id="powerSwitch" layoutX="255.0" layoutY="253.0" rotate="-45.0">
+         <children>
+            <Circle centerX="22.0" centerY="22.0" radius="22.0" stroke="BLACK" strokeType="INSIDE">
+               <effect>
+                  <DropShadow height="12.0" radius="5.5" width="12.0" />
+               </effect></Circle>
+            <Polygon layoutX="-28.0" layoutY="-48.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0">
+               <points>
+                  <Double fx:value="50.0" />
+                  <Double fx:value="50.0" />
+                  <Double fx:value="58.0" />
+                  <Double fx:value="86.0" />
+                  <Double fx:value="42.0" />
+                  <Double fx:value="86.0" />
+               </points>
+            </Polygon>
+         </children>
+      </Pane>
+      <Pane fx:id="roadSignalsSwitch" layoutX="66.0" layoutY="355.0" rotate="-45.0">
+         <children>
+            <Circle centerX="22.0" centerY="22.0" radius="22.0" stroke="BLACK" strokeType="INSIDE">
+               <effect>
+                  <DropShadow height="12.0" radius="5.5" width="12.0" />
+               </effect></Circle>
+            <Polygon layoutX="-28.0" layoutY="-48.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0">
+               <points>
+                  <Double fx:value="50.0" />
+                  <Double fx:value="50.0" />
+                  <Double fx:value="58.0" />
+                  <Double fx:value="86.0" />
+                  <Double fx:value="42.0" />
+                  <Double fx:value="86.0" />
+               </points>
+            </Polygon>
+         </children>
+      </Pane>
+      <Label layoutX="68.0" layoutY="14.0" text="WIPERS" />
+      <Label layoutX="54.0" layoutY="39.0" text="OFF" />
+      <Label layoutX="105.0" layoutY="39.0" text="ON" />
+      <Label layoutX="61.0" layoutY="113.0" text="CAMERAS" />
+      <Label layoutX="63.0" layoutY="142.0" text="1" />
+      <Label layoutX="79.0" layoutY="133.0" text="OFF" />
+      <Label layoutX="107.0" layoutY="142.0" text="2" />
+      <Label layoutX="43.0" layoutY="209.0" text="LEVEL CROSSING" />
+      <Label layoutX="16.0" layoutY="244.0" text="IN ORDER" />
+      <Label layoutX="106.0" layoutY="244.0" text="FAILED" />
+      <Circle fx:id="leveCrossingFailedLight" fill="SLATEGRAY" layoutX="125.0" layoutY="235.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+         <effect>
+            <InnerShadow height="5.0" radius="2.0" width="5.0" />
+         </effect></Circle>
+      <Label layoutX="36.0" layoutY="311.0" text="RED ROAD SIGNALS" />
+      <Label layoutX="106.0" layoutY="346.0" text="FAILED" />
+      <Circle fx:id="roadSignalsFailedLight" fill="SLATEGRAY" layoutX="125.0" layoutY="337.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+         <effect>
+            <InnerShadow height="5.0" radius="2.0" width="5.0" />
+         </effect></Circle>
+      <Label layoutX="14.0" layoutY="346.0" text="WORKING" />
+      <Circle fx:id="roadSignalsWorkingLight" fill="YELLOW" layoutX="44.0" layoutY="337.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+         <effect>
+            <InnerShadow height="5.0" radius="2.0" width="5.0" />
+         </effect></Circle>
+      <Label layoutX="236.0" layoutY="40.0" text="DAY" />
+      <Label layoutX="298.0" layoutY="39.0" text="NIGHT" />
+      <Label layoutX="241.0" layoutY="142.0" text="ON" />
+      <Label layoutX="295.0" layoutY="142.0" text="OFF" />
+      <Label layoutX="251.0" layoutY="113.0" text="MONITOR" />
+      <Label layoutX="258.0" layoutY="209.0" text="POWER" />
+      <Label layoutX="294.0" layoutY="243.0" text="FAILED" />
+      <Circle fx:id="powerFailedLight" fill="SLATEGRAY" layoutX="313.0" layoutY="234.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+         <effect>
+            <InnerShadow height="5.0" radius="2.0" width="5.0" />
+         </effect></Circle>
+      <Label layoutX="242.0" layoutY="243.0" text="ON" />
+      <VBox alignment="CENTER" fillWidth="false" layoutX="288.0" layoutY="349.0" prefHeight="250.0" prefWidth="74.0" spacing="50.0">
+         <children>
+            <AnchorPane>
+               <children>
+                  <Circle radius="25.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                     <effect>
+                        <DropShadow height="0.24" offsetX="3.0" offsetY="3.0" radius="0.0" width="0.0" />
+                     </effect></Circle>
+                  <Circle fill="#a8abae" radius="20.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                  <Circle fill="WHITE" radius="18.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                     <effect>
+                        <InnerShadow />
+                     </effect></Circle>
+                  <Label layoutX="-9.0" layoutY="-24.0" text="R">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane>
+               <children>
+                  <Circle radius="25.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                     <effect>
+                        <DropShadow height="0.24" offsetX="3.0" offsetY="3.0" radius="0.0" width="0.0" />
+                     </effect></Circle>
+                  <Circle fill="#a8abae" radius="20.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                  <Circle fill="RED" radius="18.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                     <effect>
+                        <InnerShadow />
+                     </effect></Circle>
+               </children>
+            </AnchorPane>
+            <AnchorPane>
+               <children>
+                  <Circle radius="25.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                     <effect>
+                        <DropShadow height="0.24" offsetX="3.0" offsetY="3.0" radius="0.0" width="0.0" />
+                     </effect></Circle>
+                  <Circle fill="#a8abae" radius="20.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                  <Circle fill="WHITE" radius="18.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                     <effect>
+                        <InnerShadow />
+                     </effect></Circle>
+                  <Label layoutX="-8.0" layoutY="-22.0" text="L">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane>
+               <children>
+                  <Circle radius="25.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                     <effect>
+                        <DropShadow height="0.24" offsetX="3.0" offsetY="3.0" radius="0.0" width="0.0" />
+                     </effect></Circle>
+                  <Circle fill="#a8abae" radius="20.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                  <Circle fill="WHITE" radius="18.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                     <effect>
+                        <InnerShadow />
+                     </effect></Circle>
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
+      <Label layoutX="347.0" layoutY="339.0" text="RAISE" />
+      <Label layoutX="348.0" layoutY="415.0" text="STOP" />
+      <Label layoutX="348.0" layoutY="490.0" text="LOWER" />
+      <Label layoutX="344.0" layoutY="566.0" text="CROSSING CLEAR" />
+      <Circle fx:id="barriersUpLight" fill="RED" layoutX="222.0" layoutY="348.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+         <effect>
+            <InnerShadow height="5.0" radius="2.0" width="5.0" />
+         </effect></Circle>
+      <Circle fx:id="barriersDownLight" fill="SLATEGRAY" layoutX="222.0" layoutY="499.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+         <effect>
+            <InnerShadow height="5.0" radius="2.0" width="5.0" />
+         </effect></Circle>
+      <Label ellipsisString="" layoutX="185.0" layoutY="362.0" lineSpacing="1.0" prefHeight="17.0" prefWidth="74.0" text="BARRIERS UP" wrapText="true" />
+      <Label ellipsisString="" layoutX="173.0" layoutY="513.0" lineSpacing="1.0" prefHeight="17.0" prefWidth="95.0" text="BARRIERS DOWN" wrapText="true" />
+      <Circle layoutX="88.0" layoutY="575.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+         <effect>
+            <DropShadow height="0.24" offsetX="3.0" offsetY="3.0" radius="0.0" width="0.0" />
+         </effect></Circle>
+      <Circle fill="#a8abae" layoutX="88.0" layoutY="575.0" radius="20.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Circle fill="WHITE" layoutX="88.0" layoutY="575.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+         <effect>
+            <InnerShadow />
+         </effect></Circle>
+      <Label layoutX="9.0" layoutY="566.0" text="PICTURE" />
+      <Pane fx:id="raiseSwitch" layoutX="66.0" layoutY="648.0" rotate="45.0">
+         <children>
+            <Circle centerX="22.0" centerY="22.0" radius="22.0" stroke="BLACK" strokeType="INSIDE">
+               <effect>
+                  <DropShadow height="12.0" radius="5.5" width="12.0" />
+               </effect></Circle>
+            <Polygon layoutX="-28.0" layoutY="-48.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0">
+               <points>
+                  <Double fx:value="50.0" />
+                  <Double fx:value="50.0" />
+                  <Double fx:value="58.0" />
+                  <Double fx:value="86.0" />
+                  <Double fx:value="42.0" />
+                  <Double fx:value="86.0" />
+               </points>
+            </Polygon>
+         </children>
+      </Pane>
+      <Label layoutX="71.0" layoutY="617.0" text="RAISE" />
+      <Label layoutX="38.0" layoutY="639.0" text="AUTO" />
+      <Label layoutX="104.0" layoutY="639.0" text="MANUAL" />
+      <Pane fx:id="lowerSwitch" layoutX="247.0" layoutY="650.0" rotate="45.0">
+         <children>
+            <Circle centerX="22.0" centerY="22.0" radius="22.0" stroke="BLACK" strokeType="INSIDE">
+               <effect>
+                  <DropShadow height="12.0" radius="5.5" width="12.0" />
+               </effect></Circle>
+            <Polygon layoutX="-28.0" layoutY="-48.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0">
+               <points>
+                  <Double fx:value="50.0" />
+                  <Double fx:value="50.0" />
+                  <Double fx:value="58.0" />
+                  <Double fx:value="86.0" />
+                  <Double fx:value="42.0" />
+                  <Double fx:value="86.0" />
+               </points>
+            </Polygon>
+         </children>
+      </Pane>
+      <Label layoutX="248.0" layoutY="619.0" text="LOWER" />
+      <Label layoutX="219.0" layoutY="641.0" text="AUTO" />
+      <Label layoutX="285.0" layoutY="641.0" text="MANUAL" />
+      <Label layoutX="237.0" layoutY="14.0" text="ILLUMINATION" />
+      <Region fx:id="wiperClicktarget" layoutX="44.0" layoutY="13.0" prefHeight="90.0" prefWidth="91.0" />
+      <Region fx:id="illuminationClicktarget" layoutX="232.0" layoutY="12.0" prefHeight="90.0" prefWidth="108.0" />
+      <Region fx:id="camerasClickTarget" layoutX="36.0" layoutY="114.0" prefHeight="90.0" prefWidth="108.0" />
+      <Region fx:id="monitorClickTarget" layoutX="227.0" layoutY="110.0" prefHeight="90.0" prefWidth="108.0" />
+      <Region fx:id="inOrderClickTarget" layoutX="8.0" layoutY="208.0" prefHeight="98.0" prefWidth="142.0" />
+      <Region fx:id="powerClickTarget" layoutX="234.0" layoutY="212.0" prefHeight="90.0" prefWidth="108.0" />
+      <Region fx:id="roadSignalsClickTarget" layoutX="12.0" layoutY="311.0" prefHeight="90.0" prefWidth="142.0" />
+      <Region fx:id="raiseButtonClickTarget" layoutX="283.0" layoutY="321.0" prefHeight="62.0" prefWidth="101.0" />
+      <Region fx:id="stopButtonClickTarget" layoutX="282.0" layoutY="393.0" prefHeight="62.0" prefWidth="101.0" />
+      <Region fx:id="lowerButtonClickTarget" layoutX="282.0" layoutY="468.0" prefHeight="62.0" prefWidth="116.0" />
+      <Region fx:id="crossingClearClickTarget" layoutX="281.0" layoutY="544.0" prefHeight="62.0" prefWidth="165.0" />
+      <Region fx:id="pictureButtonClickTarget" layoutX="1.0" layoutY="544.0" prefHeight="62.0" prefWidth="125.0" />
+      <Region fx:id="raiseWitchClickTarget" layoutX="28.0" layoutY="619.0" prefHeight="83.0" prefWidth="125.0" />
+      <Region fx:id="lowerSwitchClickTarget" layoutX="215.0" layoutY="617.0" prefHeight="83.0" prefWidth="125.0" />
+   </children>
+</fx:root>
