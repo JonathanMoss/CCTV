@@ -7,29 +7,25 @@ package cctv.level.crossing;
  */
 public enum MediaChapter {
 
-    BARRIERS_UP_STILL (2.9 ,3.0),
-    LOWER_SEQUENCE (3, 27),
-    RAISE_SEQUENCE (300, 311),
-    TRAIN_RIGHT_TO_LEFT (236, 251),
-    TRAIN_LEFT_TO_RIGHT (281.0, 300.0),
-    BARRIERS_DOWN (25, 101);
+    BARRIERS_UP_STILL ("/resources/BarriersUp.mp4"),
+    LOWER_SEQUENCE ("/resources/LowerSequence.mp4"),
+    RAISE_SEQUENCE ("/resources/BarriersRaise.mp4"),
+    TRAIN_RIGHT_TO_LEFT ("/resources/TrainRightToLeft.mp4"),
+    TRAIN_LEFT_TO_RIGHT ("/resources/TrainLeftToRight.mp4"),
+    BARRIERS_DOWN ("/resources/BarriersDownNoTrains.mp4");
     
-    private final double startSeconds;
-    private final double endSeconds;
+    private final String resource;
 
-    MediaChapter (double start, double end) {
+    MediaChapter (String resource) {
     
-        this.startSeconds = start;
-        this.endSeconds = end;
+        this.resource = resource;
     
     }
     
-    public double getStart() {
-        return this.startSeconds;
+    public String getResource() {
+        return this.resource;
     }
     
-    public double getEnd() {
-        return this.endSeconds;
-    }
+
     
 }

@@ -2,8 +2,10 @@ package cctv.level.crossing;
 
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import javafx.animation.FadeTransition;
+import javafx.animation.FillTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -12,13 +14,19 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.media.AudioClip;
+import static javafx.scene.media.AudioClip.INDEFINITE;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+
 import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 /**
@@ -61,24 +69,61 @@ public class LevelCrossingCCTV extends AnchorPane{
     @FXML private Region raiseSwitchClickTarget;
     @FXML private Region lowerSwitchClickTarget;
     @FXML private MediaView mv;
+    @FXML private Rectangle monitorPowerLight;
+    @FXML private Circle crossingClearButtonLight;
     
-    private final static String MEDIA = "/resources/media.mp4";
-    private final URL mediaFile = getClass().getResource(MEDIA);
-    private final Media videoClip = new Media(this.mediaFile.toString());
-    private final MediaPlayer mp = new MediaPlayer (this.videoClip);
+    private final URL[] mediaFile; 
+    private final Media[] videoClip;
+    private final MediaPlayer[] mp;
     
     private ObjectProperty <LevelCrossingActionStatus> status = new SimpleObjectProperty<>(LevelCrossingActionStatus.BARRIERS_UP);
     public LevelCrossingActionStatus getLevelCrossingActionStatus() {return this.status.get();}
     public void setLevelCrossingActionStatus(LevelCrossingActionStatus status){this.status.set(status);}
     
-    private BooleanProperty mediaVisible = new SimpleBooleanProperty (false);
-    public Boolean getMediaVisible() {return this.mediaVisible.get();}
-    public void setMediaVisible(Boolean mediaVisible){this.mediaVisible.set(mediaVisible);}
+    private BooleanProperty monitorPowerOn = new SimpleBooleanProperty(true);
+    public Boolean getMonitorPowerOn () {return this.monitorPowerOn.get();}
+    public void setMonitorPowerOn (Boolean monitorPowerOn) {this.monitorPowerOn.set(monitorPowerOn);}
     
-    private Duration startTime = Duration.seconds(MediaChapter.BARRIERS_UP_STILL.getStart());
-    private Duration endTime = Duration.seconds(MediaChapter.BARRIERS_UP_STILL.getEnd());
+    private FadeTransition ft = new FadeTransition(Duration.millis(3000), this.mv);
+    private ColorAdjust day = new ColorAdjust();
     
-    public LevelCrossingCCTV () {
+    private ObjectProperty <CameraFunction> cameraSelection = new SimpleObjectProperty<>(CameraFunction.CAMERA_ONE);
+    public CameraFunction getCameraSelection () {return this.cameraSelection.get();}
+    public void setCameraSelection (CameraFunction cameraFunction) {this.cameraSelection.set(cameraFunction);}
+    
+    private final static String ALARM_CLIP = "/resources/NeedCrossingClearAlert.wav";
+    private final URL audioClipFile = getClass().getResource(ALARM_CLIP);
+    private final AudioClip alarmAudio = new AudioClip(audioClipFile.toString());
+    
+    private Boolean autoLower = false;
+    private Boolean autoRaise = false;
+    
+    private void lowerSequence () {
+        
+        this.mv.setMediaPlayer(this.mp[1]);
+        this.showPicture();
+        this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_LOWERING);
+        this.mp[1].play();
+        this.mp[1].setOnEndOfMedia(()->{
+        
+            this.barriersDownLight.setFill(Color.YELLOW);
+            this.mv.setMediaPlayer(this.mp[5]);
+            this.mp[5].play();
+            FillTransition ft = new FillTransition (Duration.millis(500), this.crossingClearButtonLight, Color.WHITE, Color.YELLOW);
+            ft.setCycleCount(INDEFINITE);
+            ft.play();
+            this.alarmAudio.setCycleCount(INDEFINITE);
+        this.alarmAudio.setVolume(0.5);
+        this.alarmAudio.play();
+        
+        });
+
+        this.barriersUpLight.setFill(Color.SLATEGREY);
+        this.roadSignalsWorkingLight.setFill(Color.YELLOW);
+        
+    }
+    
+    public LevelCrossingCCTV () throws MalformedURLException {
         
         // Get a reference to the FXML file.
         this.fxmlLoader = new FXMLLoader(getClass().getResource("LevelCrossingCCTV.fxml"));
@@ -93,8 +138,51 @@ public class LevelCrossingCCTV extends AnchorPane{
         } catch (IOException e) {}
         
         //mp.setMute(true);
-        this.mv.visibleProperty().bindBidirectional(mediaVisible);
+        mv.setOpacity(0.0);
+        mv.setVisible(true);
+        mv.setEffect(day);
+        
+        this.mediaFile = new URL [MediaChapter.values().length];
+        this.videoClip = new Media [MediaChapter.values().length];
+        this.mp = new MediaPlayer [MediaChapter.values().length];
+        
+        for (int i = 0; i < MediaChapter.values().length; i++) {
+            
+            URL tempURL = getClass().getResource(MediaChapter.values()[i].getResource());
+            this.mediaFile[i] = new URL (tempURL.toString());
+            this.videoClip[i] = new Media (this.mediaFile[i].toString());
+            this.mp[i] = new MediaPlayer (this.videoClip[i]);
 
+        }
+        
+        this.mv.setMediaPlayer(this.mp[0]);
+        this.day.setContrast(-0.5);
+        this.day.setSaturation(-1.0);
+        
+        this.monitorPowerOn.addListener(new ChangeListener () {
+            
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                
+                if ((Boolean)newValue) {
+                    
+                    monitorPowerLight.setFill(Color.RED);
+
+                    if (getCameraSelection() != CameraFunction.OFF) {
+                        mv.setVisible (true);
+                    }
+                    
+                } else {
+                    
+                    monitorPowerLight.setFill(Color.SLATEGREY);
+                    mv.setVisible(false);
+                    
+                }
+                
+            }
+
+        });
+        
         this.status.addListener(new ChangeListener () {
             
             @Override
@@ -103,38 +191,30 @@ public class LevelCrossingCCTV extends AnchorPane{
                 switch ((LevelCrossingActionStatus) newValue) {
                     
                     case BARRIERS_UP:
-                        startTime = Duration.seconds(MediaChapter.BARRIERS_UP_STILL.getStart());
-                        endTime = Duration.seconds(MediaChapter.BARRIERS_UP_STILL.getEnd());
+
                         break;
                         
                     case BARRIERS_LOWERING:
-                        startTime = Duration.seconds(MediaChapter.LOWER_SEQUENCE.getStart());
-                        endTime = Duration.seconds(MediaChapter.LOWER_SEQUENCE.getEnd());
+     
                         break;
                         
                     case BARRIERS_DOWN_NO_TRAINS:
-                        startTime = Duration.seconds(MediaChapter.BARRIERS_DOWN.getStart());
-                        endTime = Duration.seconds(MediaChapter.BARRIERS_DOWN.getEnd());
+    
                         break;
                         
                     case BARRIERS_DOWN_TRAIN_LEFT_TO_RIGHT:
-                        startTime = Duration.seconds(MediaChapter.TRAIN_LEFT_TO_RIGHT.getStart());
-                        endTime = Duration.seconds(MediaChapter.TRAIN_LEFT_TO_RIGHT.getEnd());
+          
                         break;
                         
                     case BARRIERS_DOWN_TRAIN_RIGHT_TO_LEFT:
-                        startTime = new Duration(MediaChapter.TRAIN_RIGHT_TO_LEFT.getStart());
-                        endTime = new Duration(MediaChapter.TRAIN_RIGHT_TO_LEFT.getEnd());
+       
                         break;
                         
                     case BARRIERS_RAISING:
-                        startTime = Duration.seconds(MediaChapter.RAISE_SEQUENCE.getStart());
-                        endTime = Duration.seconds(MediaChapter.RAISE_SEQUENCE.getEnd());
+   
                         break; 
                     
                 }
-                
-                mp.seek(startTime);
                 
             }
 
@@ -161,12 +241,12 @@ public class LevelCrossingCCTV extends AnchorPane{
             switch (e.getButton()) {
                 
                 case PRIMARY:
-                    
+                    this.day.setContrast(-0.5);
                     this.illuminationSwitch.setRotate(-45.0);
                     break;
                     
                 case SECONDARY:
-                    
+                    this.day.setContrast(+0.5);
                     this.illuminationSwitch.setRotate(45.0);
                     break;
             }
@@ -177,18 +257,33 @@ public class LevelCrossingCCTV extends AnchorPane{
             switch (e.getButton()) {
                 
                 case PRIMARY:
+                    this.mv.setLayoutX(452.0);
+                    this.mv.setLayoutY(54.0);
+                    
+                    if (this.getMonitorPowerOn()) {
+                        this.mv.setVisible(true);
+                    }
                     
                     this.camerasSwitch.setRotate(-45.0);
+                    this.setCameraSelection(CameraFunction.CAMERA_ONE);
                     break;
                     
                 case MIDDLE:
-                    
+                    this.mv.setVisible(false);
                     this.camerasSwitch.setRotate(0.0);
+                    this.setCameraSelection(CameraFunction.OFF);
                     break;
                     
                 case SECONDARY:
+                    this.mv.setLayoutX(453.0);
+                    this.mv.setLayoutY(55.0);
+                    
+                    if (this.getMonitorPowerOn()) {
+                        this.mv.setVisible(true);
+                    }
                     
                     this.camerasSwitch.setRotate(45.0);
+                    this.setCameraSelection(CameraFunction.CAMERA_TWO);
                     break;          
             }
         });
@@ -200,11 +295,13 @@ public class LevelCrossingCCTV extends AnchorPane{
                 case PRIMARY:
                     
                     this.monitorSwitch.setRotate(-45.0);
+                    this.setMonitorPowerOn(true);
                     break;
                     
                 case SECONDARY:
                     
                     this.monitorSwitch.setRotate(45.0);
+                    this.setMonitorPowerOn(false);
                     break;
             }
         });
@@ -261,12 +358,12 @@ public class LevelCrossingCCTV extends AnchorPane{
             switch (e.getButton()) {
                 
                 case PRIMARY:
-                    
+                    this.autoRaise = true;
                     this.raiseSwitch.setRotate(-45.0);
                     break;
                     
                 case SECONDARY:
-                    
+                    this.autoRaise = false;
                     this.raiseSwitch.setRotate(45.0);
                     break;
             }
@@ -277,12 +374,12 @@ public class LevelCrossingCCTV extends AnchorPane{
             switch (e.getButton()) {
                 
                 case PRIMARY:
-                    
+                    this.autoLower = true;
                     this.lowerSwitch.setRotate(-45.0);
                     break;
                     
                 case SECONDARY:
-                    
+                    this.autoLower = false;
                     this.lowerSwitch.setRotate(45.0);
                     break;
             }
@@ -293,58 +390,63 @@ public class LevelCrossingCCTV extends AnchorPane{
         
         this.crossingClearClickTarget.setOnMouseClicked(e -> {});
         
-        this.lowerButtonClickTarget.setOnMouseClicked(e -> {});
+        this.lowerButtonClickTarget.setOnMouseClicked(e -> {
+        
+            if (!this.autoLower) {
+            
+                lowerSequence();
+                
+            }
+
+        });
         
         this.pictureButtonClickTarget.setOnMouseClicked(e -> {
         
-            if (!this.getMediaVisible()) {
-                
-                this.setMediaVisible(true);
+            if (this.mv.getOpacity() == 0.0 && this.getMonitorPowerOn() && this.getCameraSelection() != CameraFunction.OFF) {
+
+                this.showPicture();
                 
                 new Thread(() -> {
                 
                     try {
                         
-                        Thread.sleep (10000);
-                        FadeTransition ft = new FadeTransition(Duration.millis(1500), mv);
-                        ft.setFromValue(1.0);
-                        ft.setToValue(0.0);
-                        ft.setCycleCount(1);
-                        ft.play();
-                        this.setMediaVisible(false);
+                        Thread.sleep (15000);
+                        this.hidePicture();
 
                     } catch (InterruptedException ex) {}
                     
                 }).start(); 
+                
             }
-
+  
         });
         
         this.stopButtonClickTarget.setOnMouseClicked(e -> {});
 
-        this.mv.setMediaPlayer(mp);
-        this.mp.setStartTime(this.startTime);
-        this.mp.setStopTime(this.endTime);
-        
-        this.mp.setOnReady(() -> {
-            
-            mp.play();
-            
-        });
-        
-        this.mp.setOnEndOfMedia(() -> {
-        
-            if (getLevelCrossingActionStatus().equals(LevelCrossingActionStatus.BARRIERS_DOWN_NO_TRAINS)) {
-                
-                this.mp.seek(this.mp.getStartTime());
-                
-            }
-        
-        });
-        
+
+      
     }
     
-     /**
+    private synchronized void showPicture() {
+        
+        ft.setNode(this.mv);
+        ft.setToValue(1.0);
+        ft.setCycleCount(1);
+        ft.play();
+        
+
+    }
+    
+    private synchronized void hidePicture() {
+        
+        ft.setNode(this.mv);
+        ft.setToValue(0.0);
+        ft.setCycleCount(1);
+        ft.play();
+
+    }
+    
+    /**
      * This method sets the FXML Controller object.
      */
     private void setController() {this.fxmlLoader.setController(this);}
