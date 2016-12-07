@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<fx:root fx:id="pane" prefHeight="709.0" prefWidth="1073.0" style="-fx-background-color: rgb(108, 202, 126);" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="pane" prefHeight="709.0" prefWidth="1073.0" style="-fx-background-color: rgb(108, 202, 126);" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Pane fx:id="wipersSwitch" layoutX="67.0" layoutY="48.0" rotate="-45.0">
          <children>
@@ -88,7 +88,7 @@
             </Polygon>
          </children>
       </Pane>
-      <Pane fx:id="levelCrossingSwitch" layoutX="66.0" layoutY="253.0" rotate="-45.0">
+      <Pane fx:id="barrierDetectionFailureSwitch" layoutX="66.0" layoutY="253.0" rotate="-45.0">
          <children>
             <Circle centerX="22.0" centerY="22.0" radius="22.0" stroke="BLACK" strokeType="INSIDE">
                <effect>
@@ -106,7 +106,7 @@
             </Polygon>
          </children>
       </Pane>
-      <Pane fx:id="powerSwitch" layoutX="255.0" layoutY="253.0" rotate="-45.0">
+      <Pane fx:id="powerFailureSwitch" layoutX="255.0" layoutY="253.0" rotate="-45.0">
          <children>
             <Circle centerX="22.0" centerY="22.0" radius="22.0" stroke="BLACK" strokeType="INSIDE">
                <effect>
@@ -182,7 +182,7 @@
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
-      <Circle fx:id="leveCrossingFailedLight" fill="SLATEGRAY" layoutX="125.0" layoutY="235.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+      <Circle fx:id="barrierDetectionFailureLight" fill="SLATEGRAY" layoutX="125.0" layoutY="235.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
          <effect>
             <InnerShadow height="5.0" radius="2.0" width="5.0" />
          </effect></Circle>
@@ -286,7 +286,7 @@
                      <effect>
                         <InnerShadow />
                      </effect></Circle>
-                  <Label layoutX="-5.0" layoutY="-14.0" text="L">
+                  <Label layoutX="-5.0" layoutY="-17.0" text="L">
                      <font>
                         <Font size="24.0" />
                      </font>
@@ -421,8 +421,8 @@
       <Region fx:id="illuminationClicktarget" layoutX="232.0" layoutY="12.0" prefHeight="90.0" prefWidth="108.0" />
       <Region fx:id="camerasClickTarget" layoutX="36.0" layoutY="114.0" prefHeight="90.0" prefWidth="108.0" />
       <Region fx:id="monitorClickTarget" layoutX="227.0" layoutY="110.0" prefHeight="90.0" prefWidth="108.0" />
-      <Region fx:id="inOrderClickTarget" layoutX="8.0" layoutY="208.0" prefHeight="98.0" prefWidth="142.0" />
-      <Region fx:id="powerClickTarget" layoutX="234.0" layoutY="212.0" prefHeight="90.0" prefWidth="108.0" />
+      <Region fx:id="barrierDetectionFailureSwitchClickTarget" layoutX="8.0" layoutY="208.0" prefHeight="98.0" prefWidth="142.0" />
+      <Region fx:id="powerFailureSwitchClickTarget" layoutX="234.0" layoutY="212.0" prefHeight="90.0" prefWidth="108.0" />
       <Region fx:id="roadSignalsClickTarget" layoutX="12.0" layoutY="311.0" prefHeight="90.0" prefWidth="142.0" />
       <Region fx:id="raiseButtonClickTarget" layoutX="283.0" layoutY="321.0" prefHeight="62.0" prefWidth="101.0" />
       <Region fx:id="stopButtonClickTarget" layoutX="282.0" layoutY="393.0" prefHeight="62.0" prefWidth="101.0" />
