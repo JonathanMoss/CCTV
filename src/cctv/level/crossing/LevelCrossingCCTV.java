@@ -3,6 +3,7 @@ package cctv.level.crossing;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import javafx.animation.FadeTransition;
 import javafx.animation.FillTransition;
 import javafx.beans.property.BooleanProperty;
@@ -92,16 +93,10 @@ public class LevelCrossingCCTV extends AnchorPane{
     public CameraFunction getCameraSelection () {return this.cameraSelection.get();}
     public void setCameraSelection (CameraFunction cameraFunction) {this.cameraSelection.set(cameraFunction);}
     
-    private final static String ALARM_CLIP = "/resources/NeedCrossingClearAlert.wav";
+    private final static int PICTURE_HIDE_MILLISECONDS = 15000;
+    private final static String ALARM_CLIP = "/resources/alert.wav";
     private final URL audioClipFile = getClass().getResource(ALARM_CLIP);
     private final AudioClip alarmAudio = new AudioClip(audioClipFile.toString());
-    private final AudioClip powerFailureAlarm = new AudioClip(audioClipFile.toString());
-    private final AudioClip barrierDetectionFailureAlarm = new AudioClip(audioClipFile.toString());
-    private final AudioClip roadLightsAlarm = new AudioClip(audioClipFile.toString());
-    
-    private BooleanProperty roadLightsWorking = new SimpleBooleanProperty(true);
-    public Boolean getRoadLightsWorking () {return this.roadLightsWorking.get();}
-    public void setRoadLightsWorking (Boolean setRoadLightsWorking) {this.roadLightsWorking.set (setRoadLightsWorking);}
     
     private IntegerProperty barrierUpIndicationOffset = new SimpleIntegerProperty (3000);
     public int getBarrierUpIndicationOffset () {return this.barrierUpIndicationOffset.get();}
@@ -111,151 +106,27 @@ public class LevelCrossingCCTV extends AnchorPane{
     private Boolean autoRaise = false;
     private volatile Boolean autoHidePicture = true;
     
-    private FillTransition barriersDownFlash = new FillTransition (Duration.millis(500), Color.YELLOW, Color.SLATEGREY);
-    private FillTransition crossingClearFlash = new FillTransition (Duration.millis(500), Color.WHITE, Color.YELLOW);
-    private FillTransition powerFailureFlash = new FillTransition (Duration.millis(500), Color.SLATEGREY, Color.RED);
-    private FillTransition barrierDetectionFailureFlash = new FillTransition (Duration.millis(500), Color.SLATEGREY, Color.RED);
-    private FillTransition roadLightsWorkingFlash = new FillTransition (Duration.millis(500), Color.SLATEGREY, Color.YELLOW);
-    private FillTransition roadLightsFailedFlash = new FillTransition (Duration.millis(500), Color.SLATEGREY, Color.RED);
+    private FillTransition barriersIndicationFlash = new FillTransition (Duration.millis(1000), Color.SLATEGREY, Color.YELLOW);
+    private FillTransition crossingClearFlash = new FillTransition (Duration.millis(1000), Color.WHITE, Color.YELLOW);
+    private FillTransition powerFailureFlash = new FillTransition (Duration.millis(1000), Color.SLATEGREY, Color.RED);
+    private FillTransition barrierDetectionFailureFlash = new FillTransition (Duration.millis(1000), Color.SLATEGREY, Color.RED);
+    private FillTransition roadLightsWorkingFlash = new FillTransition (Duration.millis(1000), Color.SLATEGREY, Color.YELLOW);
+    private FillTransition roadLightsFailedFlash = new FillTransition (Duration.millis(1000), Color.SLATEGREY, Color.RED);
+    private FillTransition monitorOn = new FillTransition (Duration.millis(500), Color.SLATEGREY, Color.RED);
+    private FillTransition monitorOff = new FillTransition (Duration.millis(500), Color.RED, Color.SLATEGREY);
     
     private Boolean waitingCrossingClear = false;
     private Boolean crossingClear = false;
     private Boolean lowerSequenceStopped = false;
+    private Thread alertThread;
     
-    private Thread lowerSequenceThread;
+    private Thread autoHidePictureThread;
+    private long pictureOnMilli = 0;
     
-    private void refreshRoadLightsStatus() {
-    
-        switch (this.getLevelCrossingActionStatus()) {
-            
-            case BARRIERS_UP:
-            case BARRIERS_RAISING:
-                
-                this.roadLightsFailedFlash.stop();
-                this.roadLightsWorkingFlash.stop();
-                this.roadSignalsWorkingLight.setFill (Color.SLATEGREY);
-                this.roadSignalsFailedLight.setFill (Color.SLATEGREY);
-                this.roadLightsAlarm.stop();
-                
-                break;
-                
-            case BARRIERS_DOWN_NO_TRAINS:
-            case BARRIERS_DOWN_TRAIN_LEFT_TO_RIGHT:
-            case BARRIERS_DOWN_TRAIN_RIGHT_TO_LEFT:
-            case BARRIERS_LOWERING:
-                
-                if (this.getRoadLightsWorking()) {
-                    
-                    if (this.roadSignalsSwitch.getRotate() == 45.0) {
-                        
-                        // Road Lights Working, switch in 'Failed' Position.
-                        this.roadLightsWorkingFlash.play();
-                        this.roadLightsFailedFlash.stop();
-                        this.roadSignalsFailedLight.setFill (Color.SLATEGREY);
-                        this.roadLightsAlarm.play();
-                        
-                    } else {
-                        
-                        // Road Lights Working, switch in 'Working' Position.
-                        this.roadLightsWorkingFlash.stop();
-                        this.roadLightsFailedFlash.stop();
-                        this.roadSignalsWorkingLight.setFill (Color.YELLOW);
-                        this.roadSignalsFailedLight.setFill (Color.SLATEGREY);
-                        this.roadLightsAlarm.stop();
-                        
-                    }
-                    
-                } else {
-                    
-                    if (this.roadSignalsSwitch.getRotate() == 45.0) {
-                        
-                        // Road Lights not Working, switch in 'Failed' Position.
-                        this.roadLightsWorkingFlash.stop();
-                        this.roadLightsFailedFlash.stop();
-                        this.roadSignalsWorkingLight.setFill (Color.SLATEGREY);
-                        this.roadSignalsFailedLight.setFill (Color.RED);
-                        this.roadLightsAlarm.stop();
-                        
-                    } else {
-                        
-                        // Road Lights Not Working, switch in 'Working' Position.
-                        this.roadLightsWorkingFlash.stop();
-                        this.roadLightsFailedFlash.play();
-                        this.roadSignalsWorkingLight.setFill (Color.SLATEGREY);
-                        this.roadLightsAlarm.play();
-                    }
-                    
-                }
-                break;
-        }        
-    }
-    
-    
-    
-    /**
-     * This method simulates the lower sequence of the barriers.
-     */
-    private void lowerSequence () {
-        
-        this.autoHidePicture = false; // Stop the picture being hidden after the requisite time.
-        this.mv.setMediaPlayer(this.mp[1]); // Set the video clip to show the barriers down sequence.
-        this.showPicture(); // Show the monitor picture.
-        
-        
-
-        this.mp[1].play(); // Play the video clip.
-        
-        new Thread(()->{ // Remove the barriers up lights following after the offset.
-        
-            try {
-                
-                Thread.sleep (this.getBarrierUpIndicationOffset()); // Sleep for the amount of time specified by the offset.
-                this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_LOWERING); // Set the barriers lowering status.
-                this.barriersUpLight.setFill(Color.SLATEGREY); // Remove the Barrier Up Light Indication.
-                
-            } catch (InterruptedException ex) {} 
-
-        }).start();
-        
-        // This code block defines what happens when the lower sequence finishes.
-        this.mp[1].setOnEndOfMedia(()->{
-            
-            if (this.getBarriersDownDetectionAvailable()) {
-                
-                this.barriersDownFlash.stop(); 
-                this.barriersDownLight.setFill(Color.YELLOW);
-                this.crossingClearFlash.setCycleCount(INDEFINITE);
-                this.crossingClearFlash.setShape(this.crossingClearButtonLight);
-                this.waitingCrossingClear = true;
-                this.crossingClearFlash.play();
-                this.alarmAudio.setCycleCount(2);
-                this.alarmAudio.setVolume(0.5);
-                this.alarmAudio.play();
-                this.autoHidePicture = true;
-                this.hidePicture();
-                
-            } else {
-                
-                this.barriersDownFlash.setShape (this.barriersDownLight);
-                this.barriersDownFlash.setCycleCount(INDEFINITE);
-                this.barriersDownFlash.play();
-                // TODO: Sound Alarm...
-
-            }
-            
-            this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_DOWN_NO_TRAINS);
-            this.mv.setMediaPlayer(this.mp[5]);
-            this.mp[5].play();
-
-        });
-
-    }
-    
-
-    
+    private ArrayList <String> audioAlertMap = new ArrayList<>();
     
     public LevelCrossingCCTV () throws MalformedURLException {
-        
+
         // Get a reference to the FXML file.
         this.fxmlLoader = new FXMLLoader(getClass().getResource("LevelCrossingCCTV.fxml"));
         
@@ -267,29 +138,77 @@ public class LevelCrossingCCTV extends AnchorPane{
         try {
             fxmlLoader.load();
         } catch (IOException e) {}
+
+        this.autoHidePictureThread = new Thread(()->{
         
-        // Setup the BarrierDetectionFailureAlarm audio.
-        this.barrierDetectionFailureAlarm.setCycleCount(INDEFINITE);
-        this.barrierDetectionFailureAlarm.setVolume (0.5);
+            while (true) {
+                
+                try {
+                    
+                    Thread.sleep (1000);
+                    Long picShowingFor = System.currentTimeMillis() - this.pictureOnMilli;
+
+                    if (this.autoHidePicture && picShowingFor > PICTURE_HIDE_MILLISECONDS) {
+                        
+                        this.hidePicture();
+                        
+                    }
+                    
+                } catch (InterruptedException ex) {
+                   
+                }
+            }
+        });
         
+        this.autoHidePictureThread.setDaemon(true);
+        this.autoHidePictureThread.setName("AUTO_HIDE_PICTURE_THREAD");
+        this.autoHidePictureThread.start();
+       
+        // This thread takes care of the audiable alarm.
+        this.alertThread = new Thread(() -> {
+        
+            this.alarmAudio.setVolume(0.5);
+            this.alarmAudio.setCycleCount(INDEFINITE);
+            this.alarmAudio.setRate(1.0);
+            
+            while (true) {
+                
+                try {
+                    
+                    Thread.sleep(1000);
+                    
+                } catch (InterruptedException ex) {}
+                
+                if (!this.audioAlertMap.isEmpty()) {
+                    
+                    if (!this.alarmAudio.isPlaying()) {
+                        
+                        this.alarmAudio.play();
+                        
+                    }
+                    
+                } else {
+                    
+                    this.alarmAudio.stop();
+                    
+                }
+            }
+        });
+        
+        this.alertThread.setDaemon(true);
+        this.alertThread.setName("Alarm Alert Thread");
+        this.alertThread.start();
+
         // Setup the BarrierDetectionFailureFlash animation.
         this.barrierDetectionFailureFlash.setShape(this.barrierDetectionFailureLight);
         this.barrierDetectionFailureFlash.setCycleCount (INDEFINITE);
         this.barrierDetectionFailureFlash.setAutoReverse(true);
-        
-        // Setup the PowerFailureAlarm audio.
-        this.powerFailureAlarm.setCycleCount (INDEFINITE);
-        this.powerFailureAlarm.setVolume(0.5);
-        
+
         // Setup the PowerFailureFlash animation.
         this.powerFailureFlash.setShape(this.powerFailedLight);
         this.powerFailureFlash.setCycleCount (INDEFINITE);
         this.powerFailureFlash.setAutoReverse(true);
-        
-        // Setup the RoadLightsAlarm audio.
-        this.roadLightsAlarm.setCycleCount (INDEFINITE);
-        this.roadLightsAlarm.setVolume(0.5);
-        
+
         // Setup the RoadLight Flash animations.
         this.roadLightsFailedFlash.setShape (this.roadSignalsFailedLight);
         this.roadLightsFailedFlash.setCycleCount(INDEFINITE);
@@ -297,6 +216,136 @@ public class LevelCrossingCCTV extends AnchorPane{
         this.roadLightsWorkingFlash.setShape (this.roadSignalsWorkingLight);
         this.roadLightsWorkingFlash.setCycleCount(INDEFINITE);
         this.roadLightsWorkingFlash.setAutoReverse(true);
+        
+        // Setup the CrossingClear Button Flash animation.
+        this.crossingClearFlash.setShape(this.crossingClearButtonLight);
+        this.crossingClearFlash.setCycleCount(INDEFINITE);
+        this.crossingClearFlash.setAutoReverse(true);
+        
+        // Setup the Monitor Power Light animation.
+        this.monitorOn.setShape(this.monitorPowerLight);
+        this.monitorOn.setCycleCount(1);
+        this.monitorOff.setShape(this.monitorPowerLight);
+        this.monitorOff.setCycleCount(1);
+        
+        this.status.addListener(new ChangeListener () {
+            
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                
+                
+                if (!oldValue.toString().contains("BARRIERS_DOWN")) {
+                    refreshRoadLightsStatus();
+                }
+                
+                refreshBarrierStatus();
+                processBarrierFailureStatus();
+                
+                switch ((LevelCrossingActionStatus)newValue) {
+                    
+                    case BARRIERS_UP:
+                        
+                        if (getBarriersUpDetectionAvailable()) {
+                        
+                            barriersIndicationFlash.stop();
+                            barriersUpLight.setFill(Color.RED);
+                            barriersDownLight.setFill(Color.SLATEGREY);
+                            
+                        } else {
+                        
+                            barriersDownLight.setFill(Color.SLATEGREY);
+                            barriersIndicationFlash.stop();
+                            barriersIndicationFlash.setToValue(Color.RED);
+                            barriersIndicationFlash.setShape (barriersUpLight);
+                            barriersIndicationFlash.setCycleCount(INDEFINITE);
+                            barriersIndicationFlash.play();
+                            
+                        }
+                        
+                        break;
+                        
+                    case BARRIERS_LOWERING:
+                        
+                        new Thread(()->{ // Remove the barriers up lights following after the offset.
+        
+                            try {
+                
+                                Thread.sleep (getBarrierUpIndicationOffset()); // Sleep for the amount of time specified by the offset.
+                                barriersUpLight.setFill(Color.SLATEGREY);
+                                barriersIndicationFlash.stop();
+                                barriersIndicationFlash.setToValue(Color.YELLOW);
+                                barriersIndicationFlash.setShape (barriersDownLight);
+                                barriersIndicationFlash.setCycleCount(INDEFINITE);
+                                barriersIndicationFlash.play();
+
+                            } catch (InterruptedException ex) {} 
+
+                        }).start();
+                        
+                        
+                        break;
+                        
+                    case BARRIERS_RAISING:
+                        
+                        crossingClearFlash.stop();
+                        crossingClearButtonLight.setFill (Color.WHITE);
+                        crossingClear = false;
+                        waitingCrossingClear = false;
+                        
+                        new Thread(()->{
+                        
+                            try {
+                        
+                            Thread.sleep (getBarrierUpIndicationOffset() * 2); // Sleep for the amount of time specified by the offset.
+                            refreshRoadLightsStatus();
+                        
+                            } catch (InterruptedException ex) {}
+                        
+                        }).start();
+
+                        barriersDownLight.setFill(Color.SLATEGREY);
+                        barriersIndicationFlash.stop();
+                        barriersIndicationFlash.setToValue(Color.RED);
+                        barriersIndicationFlash.setShape (barriersUpLight);
+                        barriersIndicationFlash.setCycleCount(INDEFINITE);
+                        barriersIndicationFlash.play();
+                        break;
+                        
+                    case BARRIERS_DOWN_NO_TRAINS:
+                    case BARRIERS_DOWN_TRAIN_LEFT_TO_RIGHT:
+                    case BARRIERS_DOWN_TRAIN_RIGHT_TO_LEFT:
+                        
+                        if (getBarriersDownDetectionAvailable()) {
+                            
+                            barriersIndicationFlash.stop();
+                            barriersUpLight.setFill(Color.SLATEGREY);
+                            barriersDownLight.setFill(Color.YELLOW);
+                            
+                            if (waitingCrossingClear) {
+                                
+                                crossingClearFlash.play();
+                                
+                            }
+                            
+                        } else {
+                            
+                            barriersUpLight.setFill(Color.SLATEGREY);
+                            barriersIndicationFlash.stop();
+                            barriersIndicationFlash.setToValue(Color.YELLOW);
+                            barriersIndicationFlash.setShape (barriersDownLight);
+                            barriersIndicationFlash.setCycleCount(INDEFINITE);
+                            barriersIndicationFlash.play();
+                            
+                        }
+                        
+                        break;
+                    
+                }
+                
+            }
+        
+        
+        });
         
         this.roadSignalsSwitch.rotateProperty().addListener(new ChangeListener () {
             
@@ -355,13 +404,6 @@ public class LevelCrossingCCTV extends AnchorPane{
 
         });
         
-        this.lowerSequenceThread = new Thread (() -> {
-        this.lowerSequenceThread.setName("LOWER_SEQUENCE_THREAD");
-            
-
-            
-        });
-        
         //mp.setMute(true);
         mv.setOpacity(0.0);
         mv.setVisible(true);
@@ -384,20 +426,6 @@ public class LevelCrossingCCTV extends AnchorPane{
         this.day.setContrast(-0.5);
         this.day.setSaturation(-1.0);
         
-        this.barriersDownDetectionAvailable.addListener (new ChangeListener () {
-            
-            @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                
-                if ((Boolean)newValue && getLevelCrossingActionStatus().toString().contains("BARRIERS_DOWN") ) {
-                    
-                    
-                }
-                
-            }
-
-        }); 
-        
         this.monitorPowerOn.addListener(new ChangeListener () {
             
             @Override
@@ -405,7 +433,7 @@ public class LevelCrossingCCTV extends AnchorPane{
                 
                 if ((Boolean)newValue) {
                     
-                    monitorPowerLight.setFill(Color.RED);
+                    monitorOn.play();
 
                     if (getCameraSelection() != CameraFunction.OFF) {
                         mv.setVisible (true);
@@ -413,7 +441,7 @@ public class LevelCrossingCCTV extends AnchorPane{
                     
                 } else {
                     
-                    monitorPowerLight.setFill(Color.SLATEGREY);
+                    monitorOff.play();
                     mv.setVisible(false);
                     
                 }
@@ -557,6 +585,7 @@ public class LevelCrossingCCTV extends AnchorPane{
         });
         
         this.raiseSwitchClickTarget.setOnMouseClicked(e -> {
+            
             switch (e.getButton()) {
                 
                 case PRIMARY:
@@ -588,7 +617,11 @@ public class LevelCrossingCCTV extends AnchorPane{
         
         });
         
-        this.raiseButtonClickTarget.setOnMouseClicked(e -> {});
+        this.raiseButtonClickTarget.setOnMouseClicked(e -> {
+        
+            this.raiseSequence();
+        
+        });
         
         this.crossingClearClickTarget.setOnMouseClicked(e -> {
         
@@ -627,33 +660,15 @@ public class LevelCrossingCCTV extends AnchorPane{
         
         this.pictureButtonClickTarget.setOnMouseClicked(e -> {
         
-            if (this.mv.getOpacity() == 0.0 && this.getMonitorPowerOn() && this.getCameraSelection() != CameraFunction.OFF) {
-
-                this.showPicture();
-                
-                new Thread(() -> {
-                
-                    try {
-                        
-                        Thread.sleep (15000);
-                        if (this.autoHidePicture) {
-                            
-                            this.hidePicture();
-                        }
-
-                    } catch (InterruptedException ex) {}
-                    
-                }).start(); 
-                
-            }
-  
+            this.pictureOnMilli = System.currentTimeMillis();
+            this.showPicture();
+            
         });
         
         this.stopButtonClickTarget.setOnMouseClicked(e -> {
         
             if (this.getLevelCrossingActionStatus().equals(LevelCrossingActionStatus.BARRIERS_LOWERING)) {
                 
-                System.out.println("HERE");
                 this.mp[1].pause();
                 
             }
@@ -661,20 +676,30 @@ public class LevelCrossingCCTV extends AnchorPane{
         });
         
         this.refreshBarrierStatus();
+        this.processBarrierFailureStatus();
+        this.refreshRoadLightsStatus();
+        this.processPowerFailureStatus();
+
 
     }
     
     private synchronized void showPicture() {
         
-        monitorPictureTransition.setNode(this.mv);
-        monitorPictureTransition.setToValue(1.0);
-        monitorPictureTransition.setCycleCount(1);
-        monitorPictureTransition.play();
+        if (this.getMonitorPowerOn() && this.getCameraSelection() != CameraFunction.OFF) {
+            
+            monitorPictureTransition.stop();
+            monitorPictureTransition.setNode(this.mv);
+            monitorPictureTransition.setToValue(1.0);
+            monitorPictureTransition.setCycleCount(1);
+            monitorPictureTransition.play();
+      
+        }
 
     }
     
     private synchronized void hidePicture() {
         
+        monitorPictureTransition.stop();
         monitorPictureTransition.setNode(this.mv);
         monitorPictureTransition.setToValue(0.0);
         monitorPictureTransition.setCycleCount(1);
@@ -704,10 +729,30 @@ public class LevelCrossingCCTV extends AnchorPane{
     public Boolean getBarriersFailed () {return this.barriersFailed.get();}
     public void setBarriersFailed (Boolean barriersFailed) {this.barriersFailed.set (barriersFailed);}
     
+    private synchronized void stopAudioAlert(String value) {
+       
+        if (this.audioAlertMap.contains(value)) {
+            
+            this.audioAlertMap.remove(value);
+            
+        }
+        
+        
+    }
+    
+    private synchronized void startAudioAlert(String value) {
+
+        if (!this.audioAlertMap.contains(value)) {
+            
+            this.audioAlertMap.add(value);
+            
+        }
+   
+    }
     /**
      * This method provides GUI indication regarding the status of the Barrier Detection System.
      */
-    private void processBarrierFailureStatus() {
+    private synchronized void processBarrierFailureStatus() {
         
         if (this.barrierDetectionFailureSwitch.getRotate() == 45.0) {
             
@@ -715,13 +760,13 @@ public class LevelCrossingCCTV extends AnchorPane{
             
                 // Barriers failed, switch in 'Failed' position.
                 this.barrierDetectionFailureFlash.stop();
-                this.barrierDetectionFailureAlarm.stop();
+                this.stopAudioAlert("BarrierDetectionFailure");
                 this.barrierDetectionFailureLight.setFill(Color.RED);
                 
             } else {
             
                 // Barriers Working, switch in 'Failed' position.
-                this.barrierDetectionFailureAlarm.play();
+                this.startAudioAlert("BarrierDetectionFailure");
                 this.barrierDetectionFailureFlash.play();
                 
             }
@@ -731,21 +776,34 @@ public class LevelCrossingCCTV extends AnchorPane{
             if (this.getBarriersFailed()) {
            
                 // Barriers failed, switch in 'In Order' position.
-                this.barrierDetectionFailureAlarm.play();
+                this.startAudioAlert("BarrierDetectionFailure");
                 this.barrierDetectionFailureFlash.play();
+                
+                if (this.getLevelCrossingActionStatus().toString().contains("BARRIERS_UP")) {
+        
+                    barriersDownLight.setFill(Color.SLATEGREY);
+                    barriersIndicationFlash.stop();
+                    barriersIndicationFlash.setToValue(Color.RED);
+                    barriersIndicationFlash.setShape (barriersUpLight);
+                    barriersIndicationFlash.setCycleCount(INDEFINITE);
+                    barriersIndicationFlash.play();
+            
+                }
                 
             } else {
             
                 // Barriers Working, switch in 'In Order' position.
                 this.barrierDetectionFailureFlash.stop();
-                this.barrierDetectionFailureAlarm.stop();
+                this.stopAudioAlert("BarrierDetectionFailure");
                 this.barrierDetectionFailureLight.setFill(Color.SLATEGREY);
                 
             } 
         }
+        
+        
     }
     
-    private void refreshBarrierStatus() {
+    private synchronized void refreshBarrierStatus() {
         
         switch (this.getLevelCrossingActionStatus()) {
             
@@ -790,7 +848,7 @@ public class LevelCrossingCCTV extends AnchorPane{
     /**
      * This method provides GUI indication regarding the status of the Level Crossing Power Supply System.
      */
-    private void processPowerFailureStatus() {
+    private synchronized void processPowerFailureStatus() {
         
         if (this.powerFailureSwitch.getRotate() == 45.0) {
                     
@@ -798,12 +856,12 @@ public class LevelCrossingCCTV extends AnchorPane{
 
                 // Power available, switch in 'failed' position.
                 powerFailureFlash.play();
-                powerFailureAlarm.play();
+                this.startAudioAlert("PowerFailure");
 
             } else {
 
                 // Power not available, switch in 'failed' position.
-                powerFailureAlarm.stop();
+                this.stopAudioAlert("PowerFailure");
                 powerFailureFlash.stop();
                 powerFailedLight.setFill(Color.RED);
 
@@ -814,18 +872,168 @@ public class LevelCrossingCCTV extends AnchorPane{
             if (this.getLevelCrossingPower()) {
 
                 // Power available, switch in 'on' position.
-                powerFailureAlarm.stop();
+                this.stopAudioAlert("PowerFailure");
                 powerFailureFlash.stop();
                 powerFailedLight.setFill(Color.SLATEGREY);
 
             } else {
 
                 // Power not available, switch in 'on' position.
-                powerFailureAlarm.play();
+                this.startAudioAlert("PowerFailure");
                 powerFailureFlash.play();
 
             }
         }
     }
     
+    private BooleanProperty roadLightsWorking = new SimpleBooleanProperty(true);
+    public Boolean getRoadLightsWorking () {return this.roadLightsWorking.get();}
+    public void setRoadLightsWorking (Boolean setRoadLightsWorking) {this.roadLightsWorking.set (setRoadLightsWorking);}
+    
+    private synchronized void refreshRoadLightsStatus() {
+    
+        switch (this.getLevelCrossingActionStatus()) {
+            
+            case BARRIERS_UP:
+            case BARRIERS_RAISING:
+                
+                if (this.roadSignalsSwitch.getRotate() == 45.0) {
+                    
+                    this.roadLightsFailedFlash.play();
+                    this.roadLightsWorkingFlash.stop();
+                    this.roadSignalsWorkingLight.setFill (Color.SLATEGREY);
+                    this.startAudioAlert("RoadSignals");
+                    
+                } else {
+                    
+                    this.roadLightsFailedFlash.stop();
+                    this.roadLightsWorkingFlash.stop();
+                    this.roadSignalsWorkingLight.setFill (Color.SLATEGREY);
+                    this.roadSignalsFailedLight.setFill (Color.SLATEGREY);
+                    this.stopAudioAlert("RoadSignals");
+                    
+                }
+
+                break;
+                
+            case BARRIERS_DOWN_NO_TRAINS:
+            case BARRIERS_DOWN_TRAIN_LEFT_TO_RIGHT:
+            case BARRIERS_DOWN_TRAIN_RIGHT_TO_LEFT:
+            case BARRIERS_LOWERING:
+                
+                if (this.getRoadLightsWorking()) {
+                    
+                    if (this.roadSignalsSwitch.getRotate() == 45.0) {
+                        
+                        // Road Lights Working, switch in 'Failed' Position.
+                        this.roadLightsWorkingFlash.play();
+                        this.roadLightsFailedFlash.stop();
+                        this.roadSignalsFailedLight.setFill (Color.SLATEGREY);
+                        this.startAudioAlert("RoadSignals");
+                        
+                    } else {
+                        
+                        // Road Lights Working, switch in 'Working' Position.
+                        this.roadLightsWorkingFlash.stop();
+                        this.roadLightsFailedFlash.stop();
+                        this.roadSignalsWorkingLight.setFill (Color.YELLOW);
+                        this.roadSignalsFailedLight.setFill (Color.SLATEGREY);
+                        this.stopAudioAlert("RoadSignals");
+                        
+                    }
+                    
+                } else {
+                    
+                    if (this.roadSignalsSwitch.getRotate() == 45.0) {
+                        
+                        // Road Lights not Working, switch in 'Failed' Position.
+                        this.roadLightsWorkingFlash.stop();
+                        this.roadLightsFailedFlash.stop();
+                        this.roadSignalsWorkingLight.setFill (Color.SLATEGREY);
+                        this.roadSignalsFailedLight.setFill (Color.RED);
+                        this.stopAudioAlert("RoadSignals");
+                        
+                    } else {
+                        
+                        // Road Lights Not Working, switch in 'Working' Position.
+                        this.roadLightsWorkingFlash.stop();
+                        this.roadLightsFailedFlash.play();
+                        this.roadSignalsWorkingLight.setFill (Color.SLATEGREY);
+                        this.startAudioAlert("RoadSignals");
+                    }
+                    
+                }
+                break;
+        }        
+    }
+    
+    /**
+     * This method simulates the lower sequence of the barriers.
+     */
+    private void lowerSequence () {
+        
+        this.autoHidePicture = false; // Stop the picture being hidden after the requisite time.
+        this.stopRemoveVideoClip();
+        this.mv.setMediaPlayer(this.mp[1]); // Set the video clip to show the barriers down sequence.
+        // This code block defines what happens when the lower sequence finishes.
+        this.mp[1].setOnEndOfMedia(()->{
+
+            this.autoHidePicture = true;
+            this.waitingCrossingClear = true;
+            this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_DOWN_NO_TRAINS);
+            this.mv.setMediaPlayer(this.mp[5]);
+            this.mp[5].play();
+            //this.hidePicture();
+
+        });
+        
+        this.mp[1].play(); // Play the video clip.
+        this.showPicture(); // Show the monitor picture.
+        
+        this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_LOWERING);
+
+    }
+    
+    private void raiseSequence () {
+        
+        this.autoHidePicture = false;
+        this.stopRemoveVideoClip();
+        this.mv.setMediaPlayer (this.mp[2]);
+        this.mp[2].setOnEndOfMedia(() -> {
+        
+            this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_UP);
+            this.stopRemoveVideoClip();
+            this.autoHidePicture = true;
+            this.mv.setMediaPlayer(this.mp[0]);
+            this.mp[0].play();
+            //this.hidePicture();
+        
+        });
+        
+        this.mp[2].play();
+        this.showPicture();
+        
+        new Thread (()->{
+            
+            try {
+                
+                Thread.sleep(4000);
+                this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_RAISING);
+                
+            } catch (InterruptedException ex) {}
+        
+        }).start();
+
+    }
+    
+    private void stopRemoveVideoClip() {
+        
+        this.mv.setMediaPlayer(null);
+        
+        for (MediaPlayer mp1 : this.mp) {
+            mp1.stop();
+            mp1.seek(Duration.ZERO);
+        }
+                
+    }
 }
