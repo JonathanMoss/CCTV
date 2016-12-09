@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<fx:root fx:id="pane" prefHeight="709.0" prefWidth="1073.0" style="-fx-background-color: rgb(108, 202, 126);" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="pane" prefHeight="709.0" prefWidth="1073.0" style="-fx-background-color: rgb(108, 202, 126);" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Pane fx:id="wipersSwitch" layoutX="67.0" layoutY="48.0" rotate="-45.0">
          <children>
@@ -244,7 +244,7 @@
          </font></Label>
       <VBox alignment="CENTER" fillWidth="false" layoutX="288.0" layoutY="349.0" prefHeight="250.0" prefWidth="74.0" spacing="50.0">
          <children>
-            <AnchorPane>
+            <AnchorPane fx:id="raiseButtonPane">
                <children>
                   <Circle radius="25.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
                      <effect>
@@ -262,7 +262,7 @@
                   </Label>
                </children>
             </AnchorPane>
-            <AnchorPane>
+            <AnchorPane fx:id="stopButtonPane">
                <children>
                   <Circle radius="25.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
                      <effect>
@@ -275,7 +275,7 @@
                      </effect></Circle>
                </children>
             </AnchorPane>
-            <AnchorPane prefWidth="3.0">
+            <AnchorPane fx:id="lowerButtonPane" prefWidth="3.0">
                <children>
                   <Circle radius="25.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
                      <effect>
@@ -293,7 +293,7 @@
                   </Label>
                </children>
             </AnchorPane>
-            <AnchorPane>
+            <AnchorPane fx:id="crossingClearButtonPane">
                <children>
                   <Circle radius="25.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
                      <effect>
@@ -340,15 +340,6 @@
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
-      <Circle layoutX="88.0" layoutY="575.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-         <effect>
-            <DropShadow height="0.24" offsetX="3.0" offsetY="3.0" radius="0.0" width="0.0" />
-         </effect></Circle>
-      <Circle fill="#a8abae" layoutX="88.0" layoutY="575.0" radius="20.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-      <Circle fill="WHITE" layoutX="88.0" layoutY="575.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-         <effect>
-            <InnerShadow />
-         </effect></Circle>
       <Label layoutX="7.0" layoutY="566.0" text="PICTURE">
          <font>
             <Font name="Arial" size="12.0" />
@@ -428,8 +419,8 @@
       <Region fx:id="stopButtonClickTarget" layoutX="282.0" layoutY="393.0" prefHeight="62.0" prefWidth="101.0" />
       <Region fx:id="lowerButtonClickTarget" layoutX="282.0" layoutY="468.0" prefHeight="62.0" prefWidth="116.0" />
       <Region fx:id="crossingClearClickTarget" layoutX="281.0" layoutY="544.0" prefHeight="62.0" prefWidth="165.0" />
-      <Region fx:id="pictureButtonClickTarget" layoutX="1.0" layoutY="544.0" prefHeight="62.0" prefWidth="125.0" />
-      <Region fx:id="raiseSwitchClickTarget" layoutX="28.0" layoutY="619.0" prefHeight="83.0" prefWidth="125.0" />
+
+      <Region fx:id="raiseSwitchClickTarget" layoutX="62.0" layoutY="645.0" prefHeight="50.0" prefWidth="51.0" />
       <Region fx:id="lowerSwitchClickTarget" layoutX="215.0" layoutY="617.0" prefHeight="83.0" prefWidth="125.0" />
       <Rectangle fill="#474a4d" height="437.0" layoutX="417.0" layoutY="16.0" stroke="BLACK" strokeType="INSIDE" width="640.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" height="360.0" layoutX="430.0" layoutY="27.0" stroke="BLACK" strokeType="INSIDE" width="614.0" />
@@ -441,5 +432,71 @@
             <InnerShadow />
          </effect>
       </Rectangle>
+      <AnchorPane fx:id="pictureButtonPane" layoutX="63.0" layoutY="549.0" prefHeight="50.0" prefWidth="0.0">
+         <children>
+            <Circle centerX="25.0" centerY="25.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+               <effect>
+                  <DropShadow height="0.24" offsetX="3.0" offsetY="3.0" radius="0.0" width="0.0" />
+               </effect>
+            </Circle>
+            <Circle centerX="20.0" centerY="20.0" fill="#a8abae" layoutX="5.0" layoutY="5.0" radius="20.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+            <Circle centerX="18.0" centerY="18.0" fill="WHITE" layoutX="7.0" layoutY="7.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+               <effect>
+                  <InnerShadow />
+               </effect>
+            </Circle>
+         </children>
+      </AnchorPane>
+            <Region fx:id="pictureButtonClickTarget" layoutX="1.0" layoutY="544.0" prefHeight="62.0" prefWidth="125.0" />
+      <Circle fx:id="reminderApplianceSwitchRaise" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="670.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Circle>
+      <Circle fx:id="reminderApplianceSwitch1" disable="true" fill="TRANSPARENT" layoutX="269.0" layoutY="672.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Circle>
+      <Circle fx:id="reminderApplianceSwitch11" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="377.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Circle>
+      <Circle fx:id="reminderApplianceSwitch12" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="275.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Circle>
+      <Circle fx:id="reminderApplianceSwitch13" disable="true" fill="TRANSPARENT" layoutX="89.0" layoutY="173.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Circle>
+      <Circle fx:id="reminderApplianceSwitch14" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="70.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Circle>
+      <Circle fx:id="reminderApplianceSwitch15" disable="true" fill="TRANSPARENT" layoutX="277.0" layoutY="275.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Circle>
+      <Circle fx:id="reminderApplianceSwitch16" disable="true" fill="TRANSPARENT" layoutX="277.0" layoutY="173.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Circle>
+      <Circle fx:id="reminderApplianceSwitch17" disable="true" fill="TRANSPARENT" layoutX="278.0" layoutY="70.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Circle>
+      <Circle fx:id="reminderApplianceSwitch" fill="TRANSPARENT" layoutX="1020.0" layoutY="659.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Circle>
    </children>
 </fx:root>
