@@ -21,14 +21,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
@@ -41,7 +39,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import javax.swing.text.AbstractDocument.Content;
 
 /**
  * This Class provides a CCTV Level Crossing Control for use on an N/X Panel.
@@ -149,8 +146,9 @@ public class LevelCrossingCCTV extends AnchorPane{
     private Thread autoHidePictureThread;
     private long pictureOnMilli = 0;
     
-        private double initX;
-    private double initY;
+    private WritableImage switchReminderSnapshot;
+    private SnapshotParameters parameters = new SnapshotParameters();
+
     
     private ArrayList <String> audioAlertMap = new ArrayList<>();
     
@@ -200,6 +198,9 @@ public class LevelCrossingCCTV extends AnchorPane{
             fxmlLoader.load();
         } catch (IOException e) {}
         
+        parameters.setFill(Color.TRANSPARENT);
+        switchReminderSnapshot = this.reminderApplianceSwitch.snapshot(parameters, null);
+        
         this.autoHidePictureThread = new Thread(()->{
         
             while (true) {
@@ -221,49 +222,67 @@ public class LevelCrossingCCTV extends AnchorPane{
             }
         });
         
-        
-        
-        this.raiseSwitchClickTarget.setOnDragOver(e->{
+        // This is the TARGET for a Switch Reminder Appliance for the Raise Switch - Dragging Over
+        this.raiseSwitchClickTarget.setOnDragOver(e -> {
+            
             e.acceptTransferModes(TransferMode.MOVE);
-            System.out.println("DRAGGED_OVER");
             e.consume();
         
         });
         
-        this.raiseSwitchClickTarget.setOnDragDropped(e->{
-            Dragboard db = e.getDragboard();
+        // This is the TARGET for a Switch Reminder Appliance for the Raise Switch - Dropped
+        this.raiseSwitchClickTarget.setOnDragDropped(e -> {
+            
+            // Show the reminder appliance in situation.
             this.reminderApplianceSwitchRaise.setDisable(false);
             this.reminderApplianceSwitchRaise.setVisible(true);
+            e.setDropCompleted(true);
+            e.consume();
             
-        
-        
         });
         
-        this.reminderApplianceSwitch.setOnDragDetected(e->{
+        // This is the SOURCE for when a user wants to remove the reminder appliance from the Raise Switch.
+        this.reminderApplianceSwitchRaise.setOnDragDetected(e -> {
         
-            System.out.println("Drag Detected");
+            Dragboard db = this.reminderApplianceSwitchRaise.startDragAndDrop(TransferMode.MOVE);
+            ClipboardContent content = new ClipboardContent();
+            content.putImage(this.switchReminderSnapshot);
+            db.setDragView(this.switchReminderSnapshot);
+            db.setContent(content);
+            this.reminderApplianceSwitchRaise.setDisable(true);
+            this.reminderApplianceSwitchRaise.setVisible(false);
+            e.consume();
+
+        });
+        
+        // This is the SOURCE for when a user wants to apply a reminder appliance
+        this.reminderApplianceSwitch.setOnDragDetected(e -> { // Source
+        
             Dragboard db = this.reminderApplianceSwitch.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
-            SnapshotParameters parameters = new SnapshotParameters();
-            parameters.setFill(Color.TRANSPARENT);
-            WritableImage snapshot = reminderApplianceSwitch.snapshot(parameters, null);
-            content.putImage(snapshot);
-            db.setDragView(snapshot);
+            content.putImage(this.switchReminderSnapshot);
+            db.setDragView(this.switchReminderSnapshot);
             db.setContent(content);
             e.consume();
         
         });
         
+        // This is the TARGET for placing a reminder appliance back 'in the pile'
+        this.reminderApplianceSwitch.setOnDragOver(e -> {
+            
+            e.acceptTransferModes(TransferMode.MOVE);
+            e.consume();
+        
+        });
+        
+        // This is the TARGET for placing a reminder appliance back 'in the pile'
+        this.reminderApplianceSwitch.setOnDragDropped(e -> {
+        
+            e.setDropCompleted(true);
+            e.consume();
+        
+        });
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
         this.autoHidePictureThread.setDaemon(true);
         this.autoHidePictureThread.setName("AUTO_HIDE_PICTURE_THREAD");
         this.autoHidePictureThread.start();
