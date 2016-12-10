@@ -362,7 +362,7 @@
             </Polygon>
          </children>
       </Pane>
-      <Label layoutX="71.0" layoutY="617.0" text="RAISE">
+      <Label layoutX="71.0" layoutY="614.0" text="RAISE">
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
@@ -392,7 +392,7 @@
             </Polygon>
          </children>
       </Pane>
-      <Label layoutX="248.0" layoutY="619.0" text="LOWER">
+      <Label layoutX="248.0" layoutY="616.0" text="LOWER">
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
@@ -421,7 +421,7 @@
       <Region fx:id="crossingClearClickTarget" layoutX="281.0" layoutY="544.0" prefHeight="62.0" prefWidth="165.0" />
 
       <Region fx:id="raiseSwitchClickTarget" layoutX="62.0" layoutY="645.0" prefHeight="50.0" prefWidth="51.0" />
-      <Region fx:id="lowerSwitchClickTarget" layoutX="215.0" layoutY="617.0" prefHeight="83.0" prefWidth="125.0" />
+      <Region fx:id="lowerSwitchClickTarget" layoutX="240.0" layoutY="647.0" onDragDropped="#lowerSwitchDragDropped" onDragOver="#lowerSwitchDragOver" prefHeight="50.0" prefWidth="57.0" />
       <Rectangle fill="#474a4d" height="437.0" layoutX="417.0" layoutY="16.0" stroke="BLACK" strokeType="INSIDE" width="640.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" height="360.0" layoutX="430.0" layoutY="27.0" stroke="BLACK" strokeType="INSIDE" width="614.0" />
       <Rectangle arcHeight="40.0" arcWidth="40.0" fill="SLATEGRAY" height="340.0" layoutX="445.0" layoutY="38.0" stroke="BLACK" strokeType="INSIDE" width="580.0" />
@@ -448,52 +448,52 @@
          </children>
       </AnchorPane>
             <Region fx:id="pictureButtonClickTarget" layoutX="1.0" layoutY="544.0" prefHeight="62.0" prefWidth="125.0" />
-      <Circle fx:id="reminderApplianceSwitchRaise" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="670.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="raiseSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="670.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="reminderApplianceSwitch1" disable="true" fill="TRANSPARENT" layoutX="269.0" layoutY="672.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="lowerSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="269.0" layoutY="672.0" onDragDetected="#lowerSwitchDragDetected" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="reminderApplianceSwitch11" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="377.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="roadSignalsSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="377.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="reminderApplianceSwitch12" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="275.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="barrierDetectionSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="275.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="reminderApplianceSwitch13" disable="true" fill="TRANSPARENT" layoutX="89.0" layoutY="173.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="cameraSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="89.0" layoutY="173.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="reminderApplianceSwitch14" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="70.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="wiperSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="70.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="reminderApplianceSwitch15" disable="true" fill="TRANSPARENT" layoutX="277.0" layoutY="275.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="powerSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="277.0" layoutY="275.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="reminderApplianceSwitch16" disable="true" fill="TRANSPARENT" layoutX="277.0" layoutY="173.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="monitorSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="277.0" layoutY="173.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="reminderApplianceSwitch17" disable="true" fill="TRANSPARENT" layoutX="278.0" layoutY="70.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="illuminationSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="278.0" layoutY="70.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="reminderApplianceSwitch" fill="TRANSPARENT" layoutX="1020.0" layoutY="659.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0">
+      <Circle fx:id="switchReminderAppliance" fill="TRANSPARENT" layoutX="1020.0" layoutY="659.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0">
          <effect>
             <DropShadow />
          </effect>
