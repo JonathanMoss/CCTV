@@ -101,6 +101,14 @@ public class LevelCrossingCCTV extends AnchorPane{
     @FXML private Circle monitorSwitchReminderAppliance;
     @FXML private Circle illuminationSwitchReminderAppliance;
     
+    @FXML private Circle buttonReminderAppliance;
+    @FXML private Circle raiseButtonReminderAppliance;
+    @FXML private Circle stopButtonReminderAppliance;
+    @FXML private Circle lowerButtonReminderAppliance;
+    @FXML private Circle crossingClearButtonReminderAppliance;
+    @FXML private Circle pictureButtonReminderAppliance;
+    
+    
     private final URL[] mediaFile; 
     private final Media[] videoClip;
     private final MediaPlayer[] mp;
@@ -152,15 +160,15 @@ public class LevelCrossingCCTV extends AnchorPane{
     
     private Boolean waitingCrossingClear = false;
     private Boolean crossingClear = false;
-    private Thread alertThread;
+    private final Thread alertThread;
     
-    private Thread autoHidePictureThread;
+    private final Thread autoHidePictureThread;
     private long pictureOnMilli = 0;
     
-    private WritableImage switchReminderSnapshot;
+    private final WritableImage switchReminderSnapshot;
+    private final WritableImage buttonReminderSnapshot;
     private SnapshotParameters parameters = new SnapshotParameters();
 
-    
     private ArrayList <String> audioAlertMap = new ArrayList<>();
     
     private void reverseBarrierDownMediaClip () {
@@ -196,12 +204,441 @@ public class LevelCrossingCCTV extends AnchorPane{
     }
     
     @FXML
+    void buttonReminderDragDetected(MouseEvent event) {
+
+        Dragboard db = this.buttonReminderAppliance.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        content.putString("buttonReminderAppliance");
+        this.addImageToDragView(db, TypeOfReminderAppliance.BUTTON);
+        db.setContent(content);
+        event.consume();
+        
+    }
+
+    @FXML
+    void buttonReminderDragDropped(DragEvent event) {
+        
+        event.setDropCompleted(true);
+        event.consume();
+        
+    }
+
+    @FXML
+    void buttonReminderDragOver(DragEvent event) {
+        
+        if ("buttonReminderAppliance".equals(event.getDragboard().getString())) {
+                
+            event.acceptTransferModes(TransferMode.MOVE);
+                
+        }
+            
+        event.consume();
+        
+    }
+
+    
+    @FXML
+    void raiseButtonDragDetected(MouseEvent event) {
+
+    }
+
+    @FXML
+    void raiseButtonDragDropped(DragEvent event) {
+        
+        this.raiseButtonReminderAppliance.setDisable(false);
+        this.raiseButtonReminderAppliance.setVisible(true);
+        event.setDropCompleted(true);
+        event.consume();
+        
+    }
+
+    @FXML
+    void raiseButtonDragOver(DragEvent event) {
+        
+        if ("buttonReminderAppliance".equals(event.getDragboard().getString())) {
+                
+            event.acceptTransferModes(TransferMode.MOVE);
+                
+        }
+            
+        event.consume();
+        
+    }
+
+     @FXML
+    void stopButtonDragDetected(MouseEvent event) {
+
+    }
+
+    @FXML
+    void stopButtonDragDropped(DragEvent event) {
+        
+        this.stopButtonReminderAppliance.setDisable(false);
+        this.stopButtonReminderAppliance.setVisible(true);
+        event.setDropCompleted(true);
+        event.consume();
+        
+    }
+
+    @FXML
+    void stopButtonDragOver(DragEvent event) {
+        
+        if ("buttonReminderAppliance".equals(event.getDragboard().getString())) {
+                
+            event.acceptTransferModes(TransferMode.MOVE);
+                
+        }
+            
+        event.consume();
+        
+    }
+    
+    @FXML
+    void lowerButtonDragDetected(MouseEvent event) {
+
+    }
+
+    @FXML
+    void lowerButtonDragDropped(DragEvent event) {
+        
+        this.lowerButtonReminderAppliance.setDisable(false);
+        this.lowerButtonReminderAppliance.setVisible(true);
+        event.setDropCompleted(true);
+        event.consume();
+        
+    }
+
+    @FXML
+    void lowerButtonDragOver(DragEvent event) {
+        
+        if ("buttonReminderAppliance".equals(event.getDragboard().getString())) {
+                
+            event.acceptTransferModes(TransferMode.MOVE);
+                
+        }
+            
+        event.consume();
+        
+    }
+    
+    @FXML
+    void crossingClearButtonDragDetected(MouseEvent event) {
+
+    }
+
+    @FXML
+    void crossingClearButtonDragDropped(DragEvent event) {
+
+        this.crossingClearButtonReminderAppliance.setDisable(false);
+        this.crossingClearButtonReminderAppliance.setVisible(true);
+        event.setDropCompleted(true);
+        event.consume();
+        
+    }
+
+    @FXML
+    void crossingClearButtonDragOver(DragEvent event) {
+        
+        if ("buttonReminderAppliance".equals(event.getDragboard().getString())) {
+                
+            event.acceptTransferModes(TransferMode.MOVE);
+                
+        }
+            
+        event.consume();
+    }
+    
+    @FXML
+    void pictureButtonDragDetected(MouseEvent event) {
+
+    }
+
+    @FXML
+    void pictureButtonDragDropped(DragEvent event) {
+        
+        this.pictureButtonReminderAppliance.setDisable(false);
+        this.pictureButtonReminderAppliance.setVisible(true);
+        event.setDropCompleted(true);
+        event.consume();
+        
+    }
+
+    @FXML
+    void pictureButtonDragOver(DragEvent event) {
+        
+        if ("buttonReminderAppliance".equals(event.getDragboard().getString())) {
+                
+            event.acceptTransferModes(TransferMode.MOVE);
+                
+        }
+            
+        event.consume();
+    }
+    
+    @FXML
+    void barrierDetectionSwitchDragDetected(MouseEvent event) {
+
+        Dragboard db = this.barrierDetectionSwitchReminderAppliance.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        content.putString("switchReminderAppliance");
+        this.addImageToDragView(db, TypeOfReminderAppliance.SWITCH);
+        db.setContent(content);
+        this.barrierDetectionSwitchReminderAppliance.setDisable(true);
+        this.barrierDetectionSwitchReminderAppliance.setVisible(false);
+        event.consume();
+    }
+
+    @FXML
+    void barrierSwitchDragDropped(DragEvent event) {
+
+        this.barrierDetectionSwitchReminderAppliance.setDisable(false);
+        this.barrierDetectionSwitchReminderAppliance.setVisible(true);
+        event.setDropCompleted(true);
+        event.consume();
+        
+    }
+
+    @FXML
+    void barrierSwitchDragOver(DragEvent event) {
+
+        if ("switchReminderAppliance".equals(event.getDragboard().getString())) {
+                
+            event.acceptTransferModes(TransferMode.MOVE);
+                
+        }
+            
+        event.consume();
+        
+    }
+
+    @FXML
+    void cameraSwitchDragDetected(MouseEvent event) {
+
+        Dragboard db = this.cameraSwitchReminderAppliance.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        content.putString("switchReminderAppliance");
+        this.addImageToDragView(db, TypeOfReminderAppliance.SWITCH);
+        db.setContent(content);
+        this.cameraSwitchReminderAppliance.setDisable(true);
+        this.cameraSwitchReminderAppliance.setVisible(false);
+        event.consume();
+        
+    }
+
+    @FXML
+    void cameraSwitchDragDropped(DragEvent event) {
+
+        this.cameraSwitchReminderAppliance.setDisable(false);
+        this.cameraSwitchReminderAppliance.setVisible(true);
+        event.setDropCompleted(true);
+        event.consume();
+        
+    }
+
+    @FXML
+    void cameraSwitchDragOver(DragEvent event) {
+        
+        if ("switchReminderAppliance".equals(event.getDragboard().getString())) {
+                
+            event.acceptTransferModes(TransferMode.MOVE);
+                
+        }
+            
+        event.consume();
+        
+    }
+
+    @FXML
+    void illuminationSwitchDragDetected(MouseEvent event) {
+
+        Dragboard db = this.illuminationSwitchReminderAppliance.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        content.putString("switchReminderAppliance");
+        this.addImageToDragView(db, TypeOfReminderAppliance.SWITCH);
+        db.setContent(content);
+        this.illuminationSwitchReminderAppliance.setDisable(true);
+        this.illuminationSwitchReminderAppliance.setVisible(false);
+        event.consume();
+        
+    }
+
+    @FXML
+    void illuminationSwitchDragDropped(DragEvent event) {
+
+        this.illuminationSwitchReminderAppliance.setDisable(false);
+        this.illuminationSwitchReminderAppliance.setVisible(true);
+        event.setDropCompleted(true);
+        event.consume();
+        
+    }
+
+    @FXML
+    void illuminationSwitchDragOver(DragEvent event) {
+        
+        if ("switchReminderAppliance".equals(event.getDragboard().getString())) {
+                
+            event.acceptTransferModes(TransferMode.MOVE);
+                
+        }
+            
+        event.consume();
+        
+    }
+
+    @FXML
+    void monitorSwitchDragDetected(MouseEvent event) {
+
+        Dragboard db = this.monitorSwitchReminderAppliance.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        content.putString("switchReminderAppliance");
+        this.addImageToDragView(db, TypeOfReminderAppliance.SWITCH);
+        db.setContent(content);
+        this.monitorSwitchReminderAppliance.setDisable(true);
+        this.monitorSwitchReminderAppliance.setVisible(false);
+        event.consume();
+        
+    }
+
+    @FXML
+    void monitorSwitchDragDropped(DragEvent event) {
+
+        this.monitorSwitchReminderAppliance.setDisable(false);
+        this.monitorSwitchReminderAppliance.setVisible(true);
+        event.setDropCompleted(true);
+        event.consume();
+        
+    }
+
+    @FXML
+    void monitorSwitchDragOver(DragEvent event) {
+
+        if ("switchReminderAppliance".equals(event.getDragboard().getString())) {
+                
+            event.acceptTransferModes(TransferMode.MOVE);
+                
+        }
+            
+        event.consume();
+        
+    }
+
+    @FXML
+    void powerSwitchDragDetected(MouseEvent event) {
+
+        Dragboard db = this.powerSwitchReminderAppliance.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        content.putString("switchReminderAppliance");
+        this.addImageToDragView(db, TypeOfReminderAppliance.SWITCH);
+        db.setContent(content);
+        this.powerSwitchReminderAppliance.setDisable(true);
+        this.powerSwitchReminderAppliance.setVisible(false);
+        event.consume();
+        
+    }
+
+    @FXML
+    void powerSwitchDragDropped(DragEvent event) {
+
+        this.powerSwitchReminderAppliance.setDisable(false);
+        this.powerSwitchReminderAppliance.setVisible(true);
+        event.setDropCompleted(true);
+        event.consume();
+        
+    }
+
+    @FXML
+    void powerSwitchDragOver(DragEvent event) {
+
+        if ("switchReminderAppliance".equals(event.getDragboard().getString())) {
+                
+            event.acceptTransferModes(TransferMode.MOVE);
+                
+        }
+            
+        event.consume();
+        
+    }
+
+    @FXML
+    void roadSignalSwitchDragDetected(MouseEvent event) {
+
+        Dragboard db = this.roadSignalsSwitchReminderAppliance.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        content.putString("switchReminderAppliance");
+        this.addImageToDragView(db, TypeOfReminderAppliance.SWITCH);
+        db.setContent(content);
+        this.roadSignalsSwitchReminderAppliance.setDisable(true);
+        this.roadSignalsSwitchReminderAppliance.setVisible(false);
+        event.consume();
+        
+    }
+
+    @FXML
+    void roadSignalSwitchDragDropped(DragEvent event) {
+
+        this.roadSignalsSwitchReminderAppliance.setDisable(false);
+        this.roadSignalsSwitchReminderAppliance.setVisible(true);
+        event.setDropCompleted(true);
+        event.consume();
+        
+    }
+
+    @FXML
+    void roadSignalSwitchDragOver(DragEvent event) {
+
+        if ("switchReminderAppliance".equals(event.getDragboard().getString())) {
+                
+            event.acceptTransferModes(TransferMode.MOVE);
+                
+        }
+            
+        event.consume();
+    }
+
+    @FXML
+    void wiperSwitchDragDetected(MouseEvent event) {
+
+        Dragboard db = this.wiperSwitchReminderAppliance.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        content.putString("switchReminderAppliance");
+        this.addImageToDragView(db, TypeOfReminderAppliance.SWITCH);
+        db.setContent(content);
+        this.wiperSwitchReminderAppliance.setDisable(true);
+        this.wiperSwitchReminderAppliance.setVisible(false);
+        event.consume();
+        
+    }
+
+    @FXML
+    void wiperSwitchDragDropped(DragEvent event) {
+        
+        this.wiperSwitchReminderAppliance.setDisable(false);
+        this.wiperSwitchReminderAppliance.setVisible(true);
+        event.setDropCompleted(true);
+        event.consume();
+        
+    }
+
+    @FXML
+    void wiperSwitchDragOver(DragEvent event) {
+
+        if ("switchReminderAppliance".equals(event.getDragboard().getString())) {
+                
+            event.acceptTransferModes(TransferMode.MOVE);
+                
+        }
+            
+        event.consume();
+        
+    }
+    
+    @FXML
     private void lowerSwitchDragDetected (MouseEvent event) {
     
         Dragboard db = this.lowerSwitchReminderAppliance.startDragAndDrop(TransferMode.MOVE);
         ClipboardContent content = new ClipboardContent();
         content.putString("switchReminderAppliance");
-        db.setDragView(this.switchReminderSnapshot);
+        this.addImageToDragView(db, TypeOfReminderAppliance.SWITCH);
         db.setContent(content);
         this.lowerSwitchReminderAppliance.setDisable(true);
         this.lowerSwitchReminderAppliance.setVisible(false);
@@ -224,13 +661,32 @@ public class LevelCrossingCCTV extends AnchorPane{
 
         if ("switchReminderAppliance".equals(event.getDragboard().getString())) {
                 
-                event.acceptTransferModes(TransferMode.MOVE);
+            event.acceptTransferModes(TransferMode.MOVE);
                 
-            }
+        }
             
-            event.consume();
+        event.consume();
         
     }
+    
+    public void addImageToDragView (Dragboard db, TypeOfReminderAppliance type) {
+    
+        double x, y;
+        
+        switch (type) {
+            case SWITCH:
+                x = this.switchReminderSnapshot.getWidth() / 2;
+                y = this.switchReminderSnapshot.getHeight() / 2;
+                db.setDragView(this.switchReminderSnapshot, x, y);
+                break;
+            case BUTTON:
+                x = this.buttonReminderSnapshot.getWidth() / 2;
+                y = this.buttonReminderSnapshot.getHeight() / 2;
+                db.setDragView(this.buttonReminderSnapshot, x, y);
+                break;
+        }
+        
+    } 
     
     public LevelCrossingCCTV () throws MalformedURLException {
 
@@ -246,8 +702,9 @@ public class LevelCrossingCCTV extends AnchorPane{
             fxmlLoader.load();
         } catch (IOException e) {}
         
-        parameters.setFill(Color.TRANSPARENT);
-        switchReminderSnapshot = this.switchReminderAppliance.snapshot(parameters, null);
+        this.parameters.setFill(Color.TRANSPARENT);
+        this.switchReminderSnapshot = this.switchReminderAppliance.snapshot(parameters, null);
+        this.buttonReminderSnapshot = this.buttonReminderAppliance.snapshot(parameters, null);
         
         this.autoHidePictureThread = new Thread(()->{
         
@@ -300,7 +757,7 @@ public class LevelCrossingCCTV extends AnchorPane{
             Dragboard db = this.raiseSwitchReminderAppliance.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
             content.putString("switchReminderAppliance");
-            db.setDragView(this.switchReminderSnapshot);
+            this.addImageToDragView(db, TypeOfReminderAppliance.SWITCH);
             db.setContent(content);
             this.raiseSwitchReminderAppliance.setDisable(true);
             this.raiseSwitchReminderAppliance.setVisible(false);
@@ -314,7 +771,7 @@ public class LevelCrossingCCTV extends AnchorPane{
             Dragboard db = this.switchReminderAppliance.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
             content.putString("switchReminderAppliance");
-            db.setDragView(this.switchReminderSnapshot);
+            this.addImageToDragView(db, TypeOfReminderAppliance.SWITCH);
             db.setContent(content);
             e.consume();
         
@@ -323,7 +780,12 @@ public class LevelCrossingCCTV extends AnchorPane{
         // This is the TARGET for placing a reminder appliance back 'in the pile'
         this.switchReminderAppliance.setOnDragOver(e -> {
             
-            e.acceptTransferModes(TransferMode.MOVE);
+            if ("switchReminderAppliance".equals(e.getDragboard().getString())) {
+                
+                e.acceptTransferModes(TransferMode.MOVE);
+                
+            }
+            
             e.consume();
         
         });

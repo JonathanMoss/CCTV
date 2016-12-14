@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<fx:root fx:id="pane" prefHeight="709.0" prefWidth="1073.0" style="-fx-background-color: rgb(108, 202, 126);" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="pane" prefHeight="709.0" prefWidth="1073.0" style="-fx-background-color: rgb(108, 202, 126);" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Pane fx:id="wipersSwitch" layoutX="67.0" layoutY="48.0" rotate="-45.0">
          <children>
@@ -142,7 +142,7 @@
             </Polygon>
          </children>
       </Pane>
-      <Label layoutX="68.0" layoutY="14.0" text="WIPERS">
+      <Label layoutX="63.0" layoutY="14.0" text="WIPERS">
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
@@ -154,7 +154,7 @@
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
-      <Label layoutX="61.0" layoutY="113.0" text="CAMERAS">
+      <Label layoutX="58.0" layoutY="114.0" text="CAMERAS">
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
@@ -170,7 +170,7 @@
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
-      <Label layoutX="43.0" layoutY="209.0" text="LEVEL CROSSING">
+      <Label layoutX="33.0" layoutY="213.0" text="LEVEL CROSSING">
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
@@ -186,7 +186,7 @@
          <effect>
             <InnerShadow height="5.0" radius="2.0" width="5.0" />
          </effect></Circle>
-      <Label layoutX="36.0" layoutY="311.0" text="RED ROAD SIGNALS">
+      <Label layoutX="27.0" layoutY="314.0" text="RED ROAD SIGNALS">
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
@@ -222,11 +222,11 @@
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
-      <Label layoutX="251.0" layoutY="113.0" text="MONITOR">
+      <Label layoutX="249.0" layoutY="115.0" text="MONITOR">
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
-      <Label layoutX="258.0" layoutY="209.0" text="POWER">
+      <Label layoutX="254.0" layoutY="213.0" text="POWER">
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
@@ -320,7 +320,7 @@
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
-      <Label layoutX="344.0" layoutY="566.0" text="CROSSING CLEAR">
+      <Label layoutX="349.0" layoutY="566.0" text="CROSSING CLEAR">
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
@@ -340,7 +340,7 @@
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
-      <Label layoutX="7.0" layoutY="566.0" text="PICTURE">
+      <Label layoutX="5.0" layoutY="566.0" text="PICTURE">
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
@@ -404,22 +404,21 @@
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
-      <Label layoutX="237.0" layoutY="14.0" text="ILLUMINATION">
+      <Label layoutX="234.0" layoutY="14.0" text="ILLUMINATION">
          <font>
             <Font name="Arial" size="12.0" />
          </font></Label>
-      <Region fx:id="wiperClicktarget" layoutX="44.0" layoutY="13.0" prefHeight="90.0" prefWidth="91.0" />
-      <Region fx:id="illuminationClicktarget" layoutX="232.0" layoutY="12.0" prefHeight="90.0" prefWidth="108.0" />
-      <Region fx:id="camerasClickTarget" layoutX="36.0" layoutY="114.0" prefHeight="90.0" prefWidth="108.0" />
-      <Region fx:id="monitorClickTarget" layoutX="227.0" layoutY="110.0" prefHeight="90.0" prefWidth="108.0" />
-      <Region fx:id="barrierDetectionFailureSwitchClickTarget" layoutX="8.0" layoutY="208.0" prefHeight="98.0" prefWidth="142.0" />
-      <Region fx:id="powerFailureSwitchClickTarget" layoutX="234.0" layoutY="212.0" prefHeight="90.0" prefWidth="108.0" />
-      <Region fx:id="roadSignalsClickTarget" layoutX="12.0" layoutY="311.0" prefHeight="90.0" prefWidth="142.0" />
-      <Region fx:id="raiseButtonClickTarget" layoutX="283.0" layoutY="321.0" prefHeight="62.0" prefWidth="101.0" />
-      <Region fx:id="stopButtonClickTarget" layoutX="282.0" layoutY="393.0" prefHeight="62.0" prefWidth="101.0" />
-      <Region fx:id="lowerButtonClickTarget" layoutX="282.0" layoutY="468.0" prefHeight="62.0" prefWidth="116.0" />
-      <Region fx:id="crossingClearClickTarget" layoutX="281.0" layoutY="544.0" prefHeight="62.0" prefWidth="165.0" />
-
+      <Region fx:id="wiperClicktarget" layoutX="65.0" layoutY="45.0" onDragDropped="#wiperSwitchDragDropped" onDragOver="#wiperSwitchDragOver" prefHeight="50.0" prefWidth="50.0" />
+      <Region fx:id="illuminationClicktarget" layoutX="253.0" layoutY="46.0" onDragDropped="#illuminationSwitchDragDropped" onDragOver="#illuminationSwitchDragOver" prefHeight="50.0" prefWidth="50.0" />
+      <Region fx:id="camerasClickTarget" layoutX="66.0" layoutY="152.0" onDragDropped="#cameraSwitchDragDropped" onDragOver="#cameraSwitchDragOver" prefHeight="40.0" prefWidth="43.0" />
+      <Region fx:id="monitorClickTarget" layoutX="253.0" layoutY="146.0" onDragDropped="#monitorSwitchDragDropped" onDragOver="#monitorSwitchDragOver" prefHeight="50.0" prefWidth="51.0" />
+      <Region fx:id="barrierDetectionFailureSwitchClickTarget" layoutX="63.0" layoutY="251.0" onDragDropped="#barrierSwitchDragDropped" onDragOver="#barrierSwitchDragOver" prefHeight="50.0" prefWidth="50.0" />
+      <Region fx:id="powerFailureSwitchClickTarget" layoutX="252.0" layoutY="250.0" onDragDropped="#powerSwitchDragDropped" onDragOver="#powerSwitchDragOver" prefHeight="50.0" prefWidth="50.0" />
+      <Region fx:id="roadSignalsClickTarget" layoutX="63.0" layoutY="351.0" onDragDropped="#roadSignalSwitchDragDropped" onDragOver="#roadSignalSwitchDragOver" prefHeight="50.0" prefWidth="50.0" />
+      <Region fx:id="raiseButtonClickTarget" layoutX="283.0" layoutY="321.0" onDragDropped="#raiseButtonDragDropped" onDragOver="#raiseButtonDragOver" prefHeight="62.0" prefWidth="62.0" />
+      <Region fx:id="stopButtonClickTarget" layoutX="288.0" layoutY="401.0" onDragDropped="#stopButtonDragDropped" onDragOver="#stopButtonDragOver" prefHeight="50.0" prefWidth="48.0" />
+      <Region fx:id="lowerButtonClickTarget" layoutX="289.0" layoutY="473.0" onDragDropped="#lowerButtonDragDropped" onDragOver="#lowerButtonDragOver" prefHeight="50.0" prefWidth="45.0" />
+      <Region fx:id="crossingClearClickTarget" layoutX="285.0" layoutY="550.0" onDragDropped="#crossingClearButtonDragDropped" onDragOver="#crossingClearButtonDragOver" prefHeight="50.0" prefWidth="53.0" />
       <Region fx:id="raiseSwitchClickTarget" layoutX="62.0" layoutY="645.0" prefHeight="50.0" prefWidth="51.0" />
       <Region fx:id="lowerSwitchClickTarget" layoutX="240.0" layoutY="647.0" onDragDropped="#lowerSwitchDragDropped" onDragOver="#lowerSwitchDragOver" prefHeight="50.0" prefWidth="57.0" />
       <Rectangle fill="#474a4d" height="437.0" layoutX="417.0" layoutY="16.0" stroke="BLACK" strokeType="INSIDE" width="640.0" />
@@ -447,7 +446,7 @@
             </Circle>
          </children>
       </AnchorPane>
-            <Region fx:id="pictureButtonClickTarget" layoutX="1.0" layoutY="544.0" prefHeight="62.0" prefWidth="125.0" />
+            <Region fx:id="pictureButtonClickTarget" layoutX="62.0" layoutY="552.0" onDragDropped="#pictureButtonDragDropped" onDragOver="#pictureButtonDragOver" prefHeight="50.0" prefWidth="50.0" />
       <Circle fx:id="raiseSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="670.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
@@ -458,37 +457,37 @@
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="roadSignalsSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="377.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="roadSignalsSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="377.0" onDragDetected="#roadSignalSwitchDragDetected" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="barrierDetectionSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="275.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="barrierDetectionSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="275.0" onDragDetected="#barrierDetectionSwitchDragDetected" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="cameraSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="89.0" layoutY="173.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="cameraSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="89.0" layoutY="173.0" onDragDetected="#cameraSwitchDragDetected" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="wiperSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="70.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="wiperSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="88.0" layoutY="70.0" onDragDetected="#wiperSwitchDragDetected" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="powerSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="277.0" layoutY="275.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="powerSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="277.0" layoutY="275.0" onDragDetected="#powerSwitchDragDetected" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="monitorSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="277.0" layoutY="173.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="monitorSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="277.0" layoutY="173.0" onDragDetected="#monitorSwitchDragDetected" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
       </Circle>
-      <Circle fx:id="illuminationSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="278.0" layoutY="70.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
+      <Circle fx:id="illuminationSwitchReminderAppliance" disable="true" fill="TRANSPARENT" layoutX="278.0" layoutY="70.0" onDragDetected="#illuminationSwitchDragDetected" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0" visible="false">
          <effect>
             <DropShadow />
          </effect>
@@ -496,6 +495,36 @@
       <Circle fx:id="switchReminderAppliance" fill="TRANSPARENT" layoutX="1020.0" layoutY="659.0" radius="42.0" stroke="RED" strokeType="INSIDE" strokeWidth="20.0">
          <effect>
             <DropShadow />
+         </effect>
+      </Circle>
+      <Circle fx:id="buttonReminderAppliance" fill="RED" layoutX="922.0" layoutY="670.0" onDragDetected="#buttonReminderDragDetected" onDragDropped="#buttonReminderDragDropped" onDragOver="#buttonReminderDragOver" radius="31.0" stroke="RED" strokeType="INSIDE">
+         <effect>
+            <DropShadow height="23.97" offsetX="3.0" offsetY="3.0" radius="10.7425" />
+         </effect>
+      </Circle>
+      <Circle fx:id="raiseButtonReminderAppliance" disable="true" fill="RED" layoutX="312.0" layoutY="348.0" onDragDetected="#raiseButtonDragDetected" radius="31.0" stroke="RED" strokeType="INSIDE" visible="false">
+         <effect>
+            <DropShadow height="23.97" offsetX="3.0" offsetY="3.0" radius="10.7425" />
+         </effect>
+      </Circle>
+      <Circle fx:id="stopButtonReminderAppliance" disable="true" fill="RED" layoutX="311.0" layoutY="424.0" onDragDetected="#stopButtonDragDetected" radius="31.0" stroke="RED" strokeType="INSIDE" visible="false">
+         <effect>
+            <DropShadow height="23.97" offsetX="3.0" offsetY="3.0" radius="10.7425" />
+         </effect>
+      </Circle>
+      <Circle fx:id="lowerButtonReminderAppliance" disable="true" fill="RED" layoutX="312.0" layoutY="498.0" onDragDetected="#lowerButtonDragDetected" radius="31.0" stroke="RED" strokeType="INSIDE" visible="false">
+         <effect>
+            <DropShadow height="23.97" offsetX="3.0" offsetY="3.0" radius="10.7425" />
+         </effect>
+      </Circle>
+      <Circle fx:id="crossingClearButtonReminderAppliance" disable="true" fill="RED" layoutX="312.0" layoutY="574.0" onDragDetected="#crossingClearButtonDragDetected" radius="31.0" stroke="RED" strokeType="INSIDE" visible="false">
+         <effect>
+            <DropShadow height="23.97" offsetX="3.0" offsetY="3.0" radius="10.7425" />
+         </effect>
+      </Circle>
+      <Circle fx:id="pictureButtonReminderAppliance" disable="true" fill="RED" layoutX="90.0" layoutY="575.0" onDragDetected="#pictureButtonDragDetected" radius="31.0" stroke="RED" strokeType="INSIDE" visible="false">
+         <effect>
+            <DropShadow height="23.97" offsetX="3.0" offsetY="3.0" radius="10.7425" />
          </effect>
       </Circle>
    </children>
