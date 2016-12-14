@@ -240,6 +240,15 @@ public class LevelCrossingCCTV extends AnchorPane{
     @FXML
     void raiseButtonDragDetected(MouseEvent event) {
 
+        Dragboard db = this.raiseButtonReminderAppliance.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        content.putString("buttonReminderAppliance");
+        this.addImageToDragView(db, TypeOfReminderAppliance.BUTTON);
+        db.setContent(content);
+        this.raiseButtonReminderAppliance.setDisable(true);
+        this.raiseButtonReminderAppliance.setVisible(false);
+        event.consume();
+        
     }
 
     @FXML
@@ -267,7 +276,16 @@ public class LevelCrossingCCTV extends AnchorPane{
 
      @FXML
     void stopButtonDragDetected(MouseEvent event) {
-
+        
+        Dragboard db = this.stopButtonReminderAppliance.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        content.putString("buttonReminderAppliance");
+        this.addImageToDragView(db, TypeOfReminderAppliance.BUTTON);
+        db.setContent(content);
+        this.stopButtonReminderAppliance.setDisable(true);
+        this.stopButtonReminderAppliance.setVisible(false);
+        event.consume();
+        
     }
 
     @FXML
@@ -296,6 +314,15 @@ public class LevelCrossingCCTV extends AnchorPane{
     @FXML
     void lowerButtonDragDetected(MouseEvent event) {
 
+        Dragboard db = this.lowerButtonReminderAppliance.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        content.putString("buttonReminderAppliance");
+        this.addImageToDragView(db, TypeOfReminderAppliance.BUTTON);
+        db.setContent(content);
+        this.lowerButtonReminderAppliance.setDisable(true);
+        this.lowerButtonReminderAppliance.setVisible(false);
+        event.consume();
+        
     }
 
     @FXML
@@ -324,6 +351,15 @@ public class LevelCrossingCCTV extends AnchorPane{
     @FXML
     void crossingClearButtonDragDetected(MouseEvent event) {
 
+        Dragboard db = this.crossingClearButtonReminderAppliance.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        content.putString("buttonReminderAppliance");
+        this.addImageToDragView(db, TypeOfReminderAppliance.BUTTON);
+        db.setContent(content);
+        this.crossingClearButtonReminderAppliance.setDisable(true);
+        this.crossingClearButtonReminderAppliance.setVisible(false);
+        event.consume();
+        
     }
 
     @FXML
@@ -350,7 +386,16 @@ public class LevelCrossingCCTV extends AnchorPane{
     
     @FXML
     void pictureButtonDragDetected(MouseEvent event) {
-
+        
+        Dragboard db = this.pictureButtonReminderAppliance.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        content.putString("buttonReminderAppliance");
+        this.addImageToDragView(db, TypeOfReminderAppliance.BUTTON);
+        db.setContent(content);
+        this.pictureButtonReminderAppliance.setDisable(true);
+        this.pictureButtonReminderAppliance.setVisible(false);
+        event.consume();
+        
     }
 
     @FXML
@@ -675,17 +720,37 @@ public class LevelCrossingCCTV extends AnchorPane{
         
         switch (type) {
             case SWITCH:
-                x = this.switchReminderSnapshot.getWidth() / 2;
-                y = this.switchReminderSnapshot.getHeight() / 2;
-                db.setDragView(this.switchReminderSnapshot, x, y);
+                
+                if (System.getProperty("os.name").contains("Windows")) {
+                    
+                    x = this.switchReminderSnapshot.getWidth() / 2;
+                    y = this.switchReminderSnapshot.getHeight() / 2;
+                    db.setDragView(this.switchReminderSnapshot, x, y);
+                    
+                } else {
+                    
+                    db.setDragView(this.switchReminderSnapshot);
+  
+                }
+
                 break;
+                
             case BUTTON:
-                x = this.buttonReminderSnapshot.getWidth() / 2;
-                y = this.buttonReminderSnapshot.getHeight() / 2;
-                db.setDragView(this.buttonReminderSnapshot, x, y);
+                
+                if (System.getProperty("os.name").contains("Windows")) {
+                    
+                    x = this.buttonReminderSnapshot.getWidth() / 2;
+                    y = this.buttonReminderSnapshot.getHeight() / 2;
+                    db.setDragView(this.buttonReminderSnapshot, x, y);
+                    
+                } else {
+                    
+                    db.setDragView(this.buttonReminderSnapshot);
+                    
+                }
+                
                 break;
         }
-        
     } 
     
     public LevelCrossingCCTV () throws MalformedURLException {
@@ -1036,7 +1101,6 @@ public class LevelCrossingCCTV extends AnchorPane{
 
         });
         
-        //mp.setMute(true);
         mv.setOpacity(0.0);
         mv.setVisible(true);
         mv.setEffect(day);
@@ -1051,6 +1115,7 @@ public class LevelCrossingCCTV extends AnchorPane{
             this.mediaFile[i] = new URL (tempURL.toString());
             this.videoClip[i] = new Media (this.mediaFile[i].toString());
             this.mp[i] = new MediaPlayer (this.videoClip[i]);
+            this.mp[i].setMute(true);
 
         }
         
