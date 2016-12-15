@@ -89,7 +89,6 @@ public class LevelCrossingCCTV extends AnchorPane{
     @FXML private MediaView mv;
     @FXML private Rectangle monitorPowerLight;
     @FXML private Circle crossingClearButtonLight;
-    
     @FXML private Circle switchReminderAppliance;
     @FXML private Circle raiseSwitchReminderAppliance;
     @FXML private Circle lowerSwitchReminderAppliance;
@@ -100,7 +99,6 @@ public class LevelCrossingCCTV extends AnchorPane{
     @FXML private Circle powerSwitchReminderAppliance;
     @FXML private Circle monitorSwitchReminderAppliance;
     @FXML private Circle illuminationSwitchReminderAppliance;
-    
     @FXML private Circle buttonReminderAppliance;
     @FXML private Circle raiseButtonReminderAppliance;
     @FXML private Circle stopButtonReminderAppliance;
