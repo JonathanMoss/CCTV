@@ -1817,32 +1817,52 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
 
     @Override
     public void setBarrierDownDetection(Boolean barrierDownDetection) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        this.setBarriersDownDetectionAvailable(barrierDownDetection);
+        
     }
 
     @Override
-    public void setBarrierUpDetection(Boolean barrierDownDetection) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setBarrierUpDetection(Boolean barrierUpDetection) {
+        
+       this.setBarriersUpDetectionAvailable(barrierUpDetection);
+        
     }
 
     @Override
     public void setRoadSignalFailure() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        this.setRoadLightsWorking(false);
+        
     }
 
     @Override
     public void restoreRoadSignalFailure() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        this.setRoadLightsWorking(false);
+        
     }
 
     @Override
     public void startLowerSequence() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        if (this.autoLower && this.getLevelCrossingActionStatus().equals(LevelCrossingActionStatus.BARRIERS_UP)) {
+            
+            this.lowerSequence();
+        
+        }
+        
     }
 
     @Override
     public void startRaiseSequence() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        if (this.autoRaise && this.getLevelCrossingActionStatus().toString().contains("BARRIERS_DOWN")) {
+            
+            this.raiseSequence();
+        
+        }
+        
     }
 
     @Override
