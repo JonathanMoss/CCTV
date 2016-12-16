@@ -68,7 +68,7 @@ public interface ClosedCircuitTelevisionCrossing {
     /**
      * This method simulates that Camera Two has failed.
      */
-    void faileCameraTwo();
+    void failCameraTwo();
     
     /**
      * This method restores Camera Two following a failure.
@@ -84,4 +84,14 @@ public interface ClosedCircuitTelevisionCrossing {
      * This method simulates the restoration of the Level Crossing to Signaller Control.
      */
     void cancelLocalControl();
+    
+    /**
+     * This simulates a train passing Left to Right over the Level Crossing.
+     */
+    void showTrainLeftToRight();
+    
+    /**
+     * This simulates a train passing Right to Left over the Level Crossing.
+     */
+    void showTrainRightToLeft();
 }

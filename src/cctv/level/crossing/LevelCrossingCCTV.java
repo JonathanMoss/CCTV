@@ -36,6 +36,7 @@ import static javafx.scene.media.AudioClip.INDEFINITE;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import static javafx.scene.media.MediaPlayer.Status.PAUSED;
+import static javafx.scene.media.MediaPlayer.Status.PLAYING;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -615,6 +616,14 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
     private Boolean getBarriersFailed () {return this.barriersFailed.get();}
     private void setBarriersFailed (Boolean barriersFailed) {this.barriersFailed.set (barriersFailed);}
     
+    private BooleanProperty cameraOneAvailable = new SimpleBooleanProperty (true);
+    private Boolean getCameraOneAvailable() {return this.cameraOneAvailable.get();}
+    private void setCameraOneAvailable(Boolean cameraOneAvailable) {this.cameraOneAvailable.set(cameraOneAvailable);}
+    
+    private BooleanProperty cameraTwoAvailable = new SimpleBooleanProperty (true);
+    private Boolean getCameraTwoAvailable() {return this.cameraTwoAvailable.get();}
+    private void setCameraTwoAvailable(Boolean cameraTwoAvailable) {this.cameraTwoAvailable.set(cameraTwoAvailable);}
+    
     private BooleanProperty crossingClear = new SimpleBooleanProperty (false);
     @Override
     public Boolean getCrossingClear () {return this.crossingClear.get();}
@@ -635,6 +644,10 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
     private final URL switchFile = getClass().getResource(SWITCH_CLICK);
     private final AudioClip switchAudio = new AudioClip(switchFile.toString());
     
+    private final static String BEEP = "/resources/beep.wav";
+    private final URL beepFile = getClass().getResource(BEEP);
+    private final AudioClip beepAudio = new AudioClip (beepFile.toString());
+    
     private Boolean autoLower = false;
     private Boolean autoRaise = false;
     private volatile Boolean autoHidePicture = true;
@@ -650,8 +663,9 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
     private FadeTransition monitorPictureTransition = new FadeTransition(Duration.millis(2000));
     
     private Boolean waitingCrossingClear = false;
-    private final Thread alertThread;
     
+    private final Thread alertThread;
+    private Boolean crossingUnderLocalControl = false;
     private final Thread autoHidePictureThread;
     private long pictureOnMilli = 0;
     
@@ -1049,8 +1063,37 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
                     
                     monitorOn.play();
 
-                    if (getCameraSelection() != CameraFunction.OFF) {
-                        mv.setVisible (true);
+                    switch (getCameraSelection()) {
+                        
+                        case CAMERA_ONE:
+                            
+                            if (getCameraOneAvailable()) {
+                                
+                                mv.setVisible(true);
+                                
+                            } else {
+                                
+                                mv.setVisible(false);
+                                
+                            }
+                            break;
+                            
+                        case CAMERA_TWO:
+                            
+                            if (getCameraTwoAvailable()) {
+                                
+                                mv.setVisible(true);
+                                
+                            } else {
+                                
+                                mv.setVisible(false);
+                                
+                            }
+                            break;
+                            
+                        case OFF:
+                            mv.setVisible(false);
+                            break;
                     }
                     
                 } else {
@@ -1105,7 +1148,17 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
                     this.mv.setLayoutY(54.0);
                     
                     if (this.getMonitorPowerOn()) {
-                        this.mv.setVisible(true);
+                        
+                        if (this.getCameraOneAvailable()) {
+                            
+                            this.mv.setVisible(true);
+                            
+                        } else {
+                            
+                            this.mv.setVisible(false);
+                            
+                        }
+                        
                     }
                     
                     this.rotateButton(this.camerasSwitch, -45.0);
@@ -1123,7 +1176,17 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
                     this.mv.setLayoutY(55.0);
                     
                     if (this.getMonitorPowerOn()) {
-                        this.mv.setVisible(true);
+                        
+                        if (this.getCameraTwoAvailable()) {
+                            
+                            this.mv.setVisible(true);
+                            
+                        } else {
+                            
+                            this.mv.setVisible(false);
+                            
+                        }
+                        
                     }
                     
                     this.rotateButton(this.camerasSwitch, 45.0);
@@ -1267,19 +1330,16 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
                 
                 this.pushButton(this.crossingClearButtonPane);
                 this.buttonClickAudio.play();
-                
-                if (this.mv.isVisible() && this.mv.getOpacity() == 1.0) {
-            
-                    if (this.waitingCrossingClear) {
 
-                        this.waitingCrossingClear = false;
-                        setCrossingClear(true);
-                        this.crossingClearFlash.stop();
-                        this.crossingClearButtonLight.setFill (Color.YELLOW);
-                        this.hidePicture();
-                    }
-                
-                }
+                if (this.waitingCrossingClear) {
+                    
+                    this.beepAudio.stop();
+                    this.waitingCrossingClear = false;
+                    setCrossingClear(true);
+                    this.crossingClearFlash.stop();
+                    this.crossingClearButtonLight.setFill (Color.YELLOW);
+                    this.hidePicture();
+                }       
                 
             }
             
@@ -1380,14 +1440,35 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
      */
     private synchronized void showPicture() {
         
-        if (this.getMonitorPowerOn() && this.getCameraSelection() != CameraFunction.OFF) {
-            
-            monitorPictureTransition.stop();
-            monitorPictureTransition.setNode(this.mv);
-            monitorPictureTransition.setToValue(1.0);
-            monitorPictureTransition.setCycleCount(1);
-            monitorPictureTransition.play();
-      
+        switch (this.getCameraSelection()) {
+            case CAMERA_ONE:
+                
+                if (this.getMonitorPowerOn() && this.getCameraOneAvailable()) {
+                    
+                    monitorPictureTransition.stop();
+                    monitorPictureTransition.setNode(this.mv);
+                    monitorPictureTransition.setToValue(1.0);
+                    monitorPictureTransition.setCycleCount(1);
+                    monitorPictureTransition.play();
+
+                }
+                break;
+                
+            case CAMERA_TWO:
+                
+                if (this.getMonitorPowerOn() && this.getCameraTwoAvailable()) {
+                    
+                    monitorPictureTransition.stop();
+                    monitorPictureTransition.setNode(this.mv);
+                    monitorPictureTransition.setToValue(1.0);
+                    monitorPictureTransition.setCycleCount(1);
+                    monitorPictureTransition.play();
+
+                }
+                break;
+                
+            case OFF:
+                break;
         }
 
     }
@@ -1654,24 +1735,28 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
      */
     private void lowerSequence () {
         
-        this.autoHidePicture = false; // Stop the picture being hidden after the requisite time.
-        this.stopRemoveVideoClip();
-        this.mv.setMediaPlayer(this.mp[1]); // Set the video clip to show the barriers down sequence.
-        // This code block defines what happens when the lower sequence finishes.
-        this.mp[1].setOnEndOfMedia(()->{
-
-            this.autoHidePicture = true;
-            this.waitingCrossingClear = true;
-            this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_DOWN_NO_TRAINS);
-            this.mv.setMediaPlayer(this.mp[5]);
-            this.mp[5].play();
-            //this.hidePicture();
-
-        });
+        if (!this.crossingUnderLocalControl) {
         
-        this.mp[1].play(); // Play the video clip.
-        this.showPicture(); // Show the monitor picture.
-        this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_LOWERING);
+            this.autoHidePicture = false; // Stop the picture being hidden after the requisite time.
+            this.stopRemoveVideoClip();
+            this.mv.setMediaPlayer(this.mp[1]); // Set the video clip to show the barriers down sequence.
+            // This code block defines what happens when the lower sequence finishes.
+            this.mp[1].setOnEndOfMedia(()->{
+
+                this.autoHidePicture = true;
+                this.waitingCrossingClear = true;
+                this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_DOWN_NO_TRAINS);
+                this.mv.setMediaPlayer(this.mp[5]);
+                this.mp[5].play();
+                this.beepAudio.play();
+
+            });
+        
+            this.mp[1].play(); // Play the video clip.
+            this.showPicture(); // Show the monitor picture.
+            this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_LOWERING);
+            
+        }
 
     }
     
@@ -1680,33 +1765,37 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
      */
     private void raiseSequence () {
         
-        this.autoHidePicture = false;
-        this.stopRemoveVideoClip();
-        this.mv.setMediaPlayer (this.mp[2]);
-        this.mp[2].setOnEndOfMedia(() -> {
+        if (!this.crossingUnderLocalControl) {
         
-            this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_UP);
+            this.autoHidePicture = false;
             this.stopRemoveVideoClip();
-            this.autoHidePicture = true;
-            this.mv.setMediaPlayer(this.mp[0]);
-            this.mp[0].play();
-            //this.hidePicture();
-        
-        });
-        
-        this.mp[2].play();
-        this.showPicture();
-        
-        new Thread (() -> {
+            this.mv.setMediaPlayer (this.mp[2]);
+            this.mp[2].setOnEndOfMedia(() -> {
+
+                this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_UP);
+                this.stopRemoveVideoClip();
+                this.autoHidePicture = true;
+                this.mv.setMediaPlayer(this.mp[0]);
+                this.mp[0].play();
+                //this.hidePicture();
+
+            });
+
+            this.mp[2].play();
+            this.showPicture();
+
+            new Thread (() -> {
+
+                try {
+
+                    Thread.sleep(4000);
+                    this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_RAISING);
+
+                } catch (InterruptedException ex) {}
+
+            }).start();
             
-            try {
-                
-                Thread.sleep(4000);
-                this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_RAISING);
-                
-            } catch (InterruptedException ex) {}
-        
-        }).start();
+        }
 
     }
     
@@ -1716,8 +1805,12 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
         this.mv.setMediaPlayer(null);
         
         for (MediaPlayer mp1 : this.mp) {
-            mp1.stop();
-            mp1.seek(Duration.ZERO);
+            
+            if (mp1.getStatus().equals(PLAYING)) {
+                mp1.stop();
+                mp1.seek(Duration.ZERO);
+            }
+            
         }
                 
     }
@@ -1848,6 +1941,7 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
         
         if (this.autoLower && this.getLevelCrossingActionStatus().equals(LevelCrossingActionStatus.BARRIERS_UP)) {
             
+            this.beepAudio.play();
             this.lowerSequence();
         
         }
@@ -1859,6 +1953,7 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
         
         if (this.autoRaise && this.getLevelCrossingActionStatus().toString().contains("BARRIERS_DOWN")) {
             
+            this.beepAudio.play();
             this.raiseSequence();
         
         }
@@ -1867,31 +1962,84 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
 
     @Override
     public void failCameraOne() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        this.setCameraOneAvailable(false);
+        
     }
 
     @Override
     public void restoreCameraOne() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        this.setCameraOneAvailable(true);
+        
     }
 
     @Override
-    public void faileCameraTwo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void failCameraTwo() {
+        
+        this.setCameraTwoAvailable(false);
+        
     }
 
     @Override
     public void restoreCameraTwo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        this.setCameraTwoAvailable(true);
+        
     }
 
     @Override
     public void takeLocalControl() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+        this.setCameraOneAvailable(false);
+        this.setCameraTwoAvailable(false);
+        this.setPowerFailure();
+        this.crossingUnderLocalControl = true;
+        this.barriersIndicationFlash.stop();
+        this.barriersUpLight.setFill(Color.SLATEGREY);
+        this.barriersDownLight.setFill(Color.SLATEGREY);
+        
     }
 
     @Override
     public void cancelLocalControl() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        this.setCameraOneAvailable(true);
+        this.setCameraTwoAvailable(true);
+        this.restorePowerFailure();
+        this.crossingUnderLocalControl = false;
+        this.setLevelCrossingActionStatus(LevelCrossingActionStatus.BARRIERS_DOWN_NO_TRAINS);
+        this.stopRemoveVideoClip();
+        this.mv.setMediaPlayer(this.mp[5]);
+        this.mp[5].play();
+        this.refreshBarrierStatus();
+        this.processBarrierFailureStatus();
+        this.refreshRoadLightsStatus();
+        this.processPowerFailureStatus();
+        
+    }
+
+    @Override
+    public void showTrainLeftToRight() {
+        
+        if (this.getCrossingClear()) {
+            
+            this.stopRemoveVideoClip();
+            this.mv.setMediaPlayer(this.mp[4]);
+            this.mp[4].play();
+            
+        }
+    }
+
+    @Override
+    public void showTrainRightToLeft() {
+        
+        if (this.getCrossingClear()) {
+            
+            this.stopRemoveVideoClip();
+            this.mv.setMediaPlayer(this.mp[3]);
+            this.mp[3].play();
+            
+        }
     }
 }
