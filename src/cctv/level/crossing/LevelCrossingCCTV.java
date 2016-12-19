@@ -316,6 +316,7 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
         this.barrierDetectionSwitchReminderAppliance.setDisable(true);
         this.barrierDetectionSwitchReminderAppliance.setVisible(false);
         event.consume();
+        
     }
 
     @FXML private void barrierSwitchDragDropped(DragEvent event) {
@@ -691,7 +692,7 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
         // Attempt to load the FXML file.
         try {
             
-            fxmlLoader.load();
+            fxmlLoader.load(); 
             
         } catch (IOException e) {}
         
@@ -700,7 +701,7 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
         this.switchReminderSnapshot = this.switchReminderAppliance.snapshot(parameters, null);
         this.buttonReminderSnapshot = this.buttonReminderAppliance.snapshot(parameters, null);
         
-        this.localControlReminderAppliance.setVisible(false);
+        this.localControlReminderAppliance.setVisible(false); // Hide the Local Control Reminder Appliance.
         
         // This Thread manages the Automatic Hiding of the monitor picture.
         this.autoHidePictureThread = new Thread(()->{
@@ -844,7 +845,6 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
         // Setup the RoadLight Flash animations.
         this.roadLightsFailedFlash.setShape (this.roadSignalsFailedLight);
         this.roadLightsFailedFlash.setCycleCount(INDEFINITE);
-        
         this.roadLightsWorkingFlash.setShape (this.roadSignalsWorkingLight);
         this.roadLightsWorkingFlash.setCycleCount(INDEFINITE);
         
@@ -1688,7 +1688,7 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
             case BARRIERS_LOWERING:
                 
                 if (this.getRoadLightsWorking()) {
-                    
+
                     if (this.roadSignalsSwitch.getRotate() == 45.0) {
                         
                         // Road Lights Working, switch in 'Failed' Position.
@@ -1702,7 +1702,17 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
                         // Road Lights Working, switch in 'Working' Position.
                         this.roadLightsWorkingFlash.stop();
                         this.roadLightsFailedFlash.stop();
-                        this.roadSignalsWorkingLight.setFill (Color.YELLOW);
+                        
+                        if (this.crossingUnderLocalControl) {
+                            
+                            this.roadSignalsWorkingLight.setFill (Color.SLATEGREY);
+                            
+                        } else {
+                            
+                            this.roadSignalsWorkingLight.setFill (Color.YELLOW);
+                            
+                        }
+                        
                         this.roadSignalsFailedLight.setFill (Color.SLATEGREY);
                         this.stopAudioAlert("RoadSignals");
                         
@@ -1805,14 +1815,20 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
     // This method stops all media and returns the seek value to zero.
     private void stopRemoveVideoClip() {
         
-        this.mv.setMediaPlayer(null);
+        try {
         
-        for (MediaPlayer mp1 : this.mp) {
-            
-            if (mp1.getStatus().equals(PLAYING)) {
-                mp1.stop();
-                mp1.seek(Duration.ZERO);
+            this.mv.setMediaPlayer(null);
+
+            for (MediaPlayer mp1 : this.mp) {
+
+                if (mp1.getStatus().equals(PLAYING)) {
+                    mp1.stop();
+                    mp1.seek(Duration.ZERO);
+                }
+
             }
+           
+        } catch (Exception e) {
             
         }
                 
@@ -2002,6 +2018,8 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
             this.barriersIndicationFlash.stop();
             this.barriersUpLight.setFill(Color.SLATEGREY);
             this.barriersDownLight.setFill(Color.SLATEGREY);
+            this.roadSignalsFailedLight.setFill(Color.SLATEGREY);
+            this.roadSignalsWorkingLight.setFill (Color.SLATEGREY);
             this.localControlReminderAppliance.setVisible(true);
             
         }
@@ -2019,10 +2037,6 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
         this.stopRemoveVideoClip();
         this.mv.setMediaPlayer(this.mp[5]);
         this.mp[5].play();
-        this.refreshBarrierStatus();
-        this.processBarrierFailureStatus();
-        this.refreshRoadLightsStatus();
-        this.processPowerFailureStatus();
         this.localControlReminderAppliance.setVisible(false);
         
     }

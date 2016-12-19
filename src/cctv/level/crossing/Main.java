@@ -25,7 +25,7 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(alsagerCCTV));
         primaryStage.setTitle ("N/X Panel Closed Circuit Television Crossing (CCTV)");
         primaryStage.show();
-
+        primaryStage.setOnCloseRequest(e -> {System.exit(0);});
         
         new Thread (()->{
         
