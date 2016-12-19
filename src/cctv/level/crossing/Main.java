@@ -30,29 +30,18 @@ public class Main extends Application {
         new Thread (()->{
         
             try {
-                Thread.sleep(5000);
-            } catch (InterruptedException ex) {}
-            System.out.println("Starting Lower Sequence");
-            alsagerCCTV.startLowerSequence();
-            
-            try {
                 Thread.sleep(25000);
             } catch (InterruptedException ex) {}
-            System.out.println("Train Left to Right");
-            alsagerCCTV.showTrainLeftToRight();
             
-            try {
-                Thread.sleep(20000);
-            } catch (InterruptedException ex) {}
-            System.out.println("Train Train Right to Left");
-            alsagerCCTV.showTrainRightToLeft();
+            System.out.println("Taking Local Control");
+            alsagerCCTV.takeLocalControl();
             
             
             try {
                 Thread.sleep(20000);
             } catch (InterruptedException ex) {}
-            System.out.println("Starting Raise Sequence");
-            alsagerCCTV.startRaiseSequence();
+            
+            alsagerCCTV.cancelLocalControl();
         
         }).start();
         

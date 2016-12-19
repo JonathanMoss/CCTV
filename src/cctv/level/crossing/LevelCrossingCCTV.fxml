@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<fx:root fx:id="pane" prefHeight="709.0" prefWidth="1073.0" style="-fx-background-color: rgb(108, 202, 126);" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="pane" prefHeight="709.0" prefWidth="1073.0" style="-fx-background-color: rgb(108, 202, 126);" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Pane fx:id="wipersSwitch" layoutX="67.0" layoutY="48.0" rotate="-45.0">
          <children>
@@ -527,5 +527,18 @@
             <DropShadow height="23.97" offsetX="3.0" offsetY="3.0" radius="10.7425" />
          </effect>
       </Circle>
+      <Pane fx:id="localControlReminderAppliance" layoutX="561.0" layoutY="484.0" opacity="0.91">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#0900ff" height="40.0" stroke="BLACK" strokeType="INSIDE" width="351.0" />
+            <Label layoutX="7.0" layoutY="10.0" text="CROSSING UNDER LOCAL CONTROL" textFill="WHITE">
+               <font>
+                  <Font name="Arial" size="19.0" />
+               </font>
+            </Label>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Pane>
    </children>
 </fx:root>

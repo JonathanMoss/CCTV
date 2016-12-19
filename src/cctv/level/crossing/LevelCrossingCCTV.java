@@ -105,6 +105,7 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
     @FXML private Circle lowerButtonReminderAppliance;
     @FXML private Circle crossingClearButtonReminderAppliance;
     @FXML private Circle pictureButtonReminderAppliance;
+    @FXML private Pane localControlReminderAppliance;
     
     // Functions defined within the FXML file.
     @FXML private void buttonReminderDragDetected(MouseEvent event) {
@@ -698,6 +699,8 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
         this.parameters.setFill(Color.TRANSPARENT);
         this.switchReminderSnapshot = this.switchReminderAppliance.snapshot(parameters, null);
         this.buttonReminderSnapshot = this.buttonReminderAppliance.snapshot(parameters, null);
+        
+        this.localControlReminderAppliance.setVisible(false);
         
         // This Thread manages the Automatic Hiding of the monitor picture.
         this.autoHidePictureThread = new Thread(()->{
@@ -1991,14 +1994,18 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
     @Override
     public void takeLocalControl() {
     
-        this.setCameraOneAvailable(false);
-        this.setCameraTwoAvailable(false);
-        this.setPowerFailure();
-        this.crossingUnderLocalControl = true;
-        this.barriersIndicationFlash.stop();
-        this.barriersUpLight.setFill(Color.SLATEGREY);
-        this.barriersDownLight.setFill(Color.SLATEGREY);
-        
+        if (this.getLevelCrossingActionStatus().equals(LevelCrossingActionStatus.BARRIERS_DOWN_NO_TRAINS)) {
+            this.setCameraOneAvailable(false);
+            this.setCameraTwoAvailable(false);
+            this.setPowerFailure();
+            this.crossingUnderLocalControl = true;
+            this.barriersIndicationFlash.stop();
+            this.barriersUpLight.setFill(Color.SLATEGREY);
+            this.barriersDownLight.setFill(Color.SLATEGREY);
+            this.localControlReminderAppliance.setVisible(true);
+            
+        }
+
     }
 
     @Override
@@ -2016,6 +2023,7 @@ public class LevelCrossingCCTV extends AnchorPane implements ClosedCircuitTelevi
         this.processBarrierFailureStatus();
         this.refreshRoadLightsStatus();
         this.processPowerFailureStatus();
+        this.localControlReminderAppliance.setVisible(false);
         
     }
 
